@@ -1,13 +1,11 @@
-package app.action.model;
+package app.healthRecord.model;
 
 import app.animal.model.Animal;
-import app.comment.model.Comment;
-import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -16,28 +14,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Action {
+public class HealthRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    private User user;
-
-    @ManyToOne
     private Animal animal;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Type type;
-
-    private String description;
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "action")
-    @OrderBy("createdOn DESC")
-    private List<Comment> comments;
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private String veterinaryInformation;
 }

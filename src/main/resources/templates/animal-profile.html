@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/commons::head"></head>
+<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
+<header th:replace="fragments/commons::nav"></header>
+<main>
+    <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+        <h2 class="mySticky bg-gray text-dark user" th:text="${#strings.capitalize(#strings.toLowerCase(animal.name)) +  ' ' + 'Profile'}"></h2>
+        <div class="mt-1 mb-2" style="text-align: left;">
+            <p th:text="'Name: '+ ${#strings.capitalize(#strings.toLowerCase(animal.name))}"></p>
+            <p th:text="'Type: '+ ${#strings.capitalize(#strings.toLowerCase(animal.type.name()))}"></p>
+            <p th:text="'Status: '+ ${#strings.capitalize(#strings.toLowerCase(animal.status.name()))}"></p>
+            <p th:text="'Gender: '+ ${#strings.capitalize(#strings.toLowerCase(animal.gender.name()))}"></p>
+            <p th:text="'Age: ' + (${animal.getAge()})"></p>
+            <p th:text="'Is Neutered: ' + (${animal.isNeutered()} ? 'Yes' : 'No')"></p>
+            <p th:text="'Info: ' + (${#strings.isEmpty(animal.information)} ? 'No data available' : animal.information)"></p>
+            <p th:text="'Country: '+ ${#strings.capitalize(#strings.toLowerCase(animal.location.country))}"></p>
+            <p th:text="'City: '+ ${#strings.capitalize(#strings.toLowerCase(animal.location.city))}"></p>
+            <p th:text="'Neighborhood: '+ ${#strings.capitalize(#strings.toLowerCase(animal.location.neighborhood))}"></p>
+            <p th:text="'Added by: '+ ${animal.addedBy.username}"></p>
+            <a th:if="${user.role.name() == 'ADMIN' || user.id == animal.addedBy.id}" th:href="@{'/animals/' + ${animal.id} + '/edit-profile'}" class="btn btn-primary">Edit Animal Profile</a>
+        </div>
+
+        </div>
+    <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+        <div class="mt-1 mb-2">
+
+            <div class="home-fields" style=" overflow: auto; width: 49%; float: left; margin-right: 1%;">
+                <h3 class="all-animals">All Actions</h3>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="action : ${animal.actions}">
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(action.description))}"></td>
+                        <td th:text="${#temporals.format(action.createdOn, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <a th:href="@{'/actions/' + ${action.id}}" class="btn btn-sm btn-primary">Comment</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="home-fields" style="overflow: auto; width: 49%; float: left;">
+                <h3 class="all-animals">All Health Records</h3>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Veterinary Info</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="record : ${animal.healthRecords}">
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(record.description))}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(record.veterinaryInformation))}"></td>
+                        <td th:text="${#temporals.format(record.createdOn, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+        <div class="mt-1 mb-2">
+            <div style="width: 49%; float: left; margin-right: 1%;">
+                <h3>Add Action</h3>
+                <form class="add-form" th:method="POST" th:action="@{'/actions/' + ${animal.id} + '/new'}" th:object="${actionRequest}">
+                    <div class="form-group">
+                        <div class="label-holder d-flex justify-content-center">
+                            <label for="type" class="h4 mb-2">Type</label>
+                        </div>
+                        <select class="browser-default custom-select" id="type" name="type" th:field="*{type}">
+                            <option th:each="type : ${T(app.action.model.Type).values()}" th:value="${type}" th:text="${#strings.capitalize(#strings.toLowerCase(type))}"></option>
+                        </select>
+                        <small th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="danger" style="font-size: 15px">Error Here</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="label-holder textCol d-flex justify-content-center">
+                            <label for="action-description" class="h4 mb-2">Description</label>
+                        </div>
+                        <input type="text" class="form-control" id="action-description" name="description" th:field="*{description}"/>
+                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="danger">Error message</small>
+                    </div>
+                    <div class="button-holder d-flex justify-content-center">
+                        <button type="submit" value="Register">Add action</button>
+                    </div>
+                </form>
+            </div>
+            <div style="width: 49%; float: left;">
+                <h3>Add Health Record</h3>
+                <form class="add-form" th:method="POST" th:action="@{'/healthRecords/' + ${animal.id} + '/new'}" th:object="${healthRecordRequest}">
+                    <div class="form-group">
+                        <div class="label-holder textCol d-flex justify-content-center">
+                            <label for="record-description" class="h4 mb-2">Description</label>
+                        </div>
+                        <input type="text" class="form-control" id="record-description" name="description" th:field="*{description}"/>
+                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="danger">Error message</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="label-holder textCol d-flex justify-content-center">
+                            <label for="veterinaryInformation" class="h4 mb-2">Veterinary Information</label>
+                        </div>
+                        <input type="text" class="form-control" id="veterinaryInformation" name="veterinaryInformation" th:field="*{veterinaryInformation}"/>
+                        <small th:if="${#fields.hasErrors('veterinaryInformation')}" th:errors="*{veterinaryInformation}" class="danger">Error message</small>
+                    </div>
+                    <div class="button-holder d-flex justify-content-center">
+                        <button type="submit" value="Register">Add health record</button>
+                    </div>
+                </form>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/commons::footer"></footer>
+</body>
+</html>

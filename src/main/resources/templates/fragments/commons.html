@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Stray Animal Care App</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light position-sticky fixed-top">
+        <div class="home">
+            <a th:if="${user}" th:href="@{'/home'}">Stray Animal Care App</a>
+            <a th:unless="${user}" th:href="@{'/'}">Stray Animal Care App</a>
+            <a th:if="${user}" th:href="@{'/users/' + ${user.id} + '/profile'}">My Profile</a>
+            <a th:if="${user}" th:href="@{/animals/new}">Add Animal</a>
+            <a th:if="${user}" th:href="@{/animals}">All Animals</a>
+            <a th:if="${user != null && user.role.name() == 'ADMIN'}" th:href="@{/users}">All Users</a>
+            <a th:if="${user != null && user.role.name() == 'ADMIN'}" th:href="@{/reports}">Reports</a>
+        </div>
+
+        <div class="links">
+            <li th:unless="${user}">
+                <a th:href="@{/login}">Login</a>
+            </li>
+            <li th:unless="${user}">
+                <a th:href="@{/register}">Register</a>
+            </li>
+            <li th:if="${user}">
+                <a th:href="@{/logout}">Logout</a>
+            </li>
+        </div>
+    </nav>
+</header>
+<footer class="footer bg-transparent py-2">
+    <div class="container-fluid text-center">
+        <div class="footer-background footer-text fixed-bottom">
+            &copy; Spring team 2025. All rights reserved.
+        </div>
+    </div>
+</footer>
+</body>
+</html>

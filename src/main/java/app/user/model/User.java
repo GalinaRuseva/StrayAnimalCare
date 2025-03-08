@@ -1,12 +1,14 @@
 package app.user.model;
 
 import app.action.model.Action;
+import app.animal.model.Animal;
 import app.comment.model.Comment;
 import app.location.model.Location;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +34,10 @@ public class User {
 
     //private String profilePicture;
 
-    @Column(unique = true)
+    //@Column(unique = false)
     private String email;
 
-    @Column(unique = true)
+    //@Column(unique = false)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -45,6 +47,8 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    private boolean isActive;
+
     @Column(nullable = false)
     private LocalDateTime createdOn;
 
@@ -52,8 +56,14 @@ public class User {
     private LocalDateTime updatedOn;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    private List<Action> actions;
+    @OrderBy("createdOn DESC")
+    private List<Action> actions = new ArrayList<>();
 
     @Embedded
     private Location location;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @OrderBy("createdOn DESC")
+    //@JoinTable(name = "followedAnimal_follower", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    private List<Animal> followedAnimals = new ArrayList<>();
 }

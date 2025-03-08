@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Animal Form</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
+<h1>Animal Information</h1>
+
+<form th:action="@{'/animals/' + ${animal.id} + '/edit-profile'}" th:object="${animalEditRequest}" th:method="PUT">
+<!--  <input type="hidden" th:field="*{animal.id}" />-->
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="name" class="h4 mb-2">Name</label>
+    </div>
+    <input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
+    <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="danger">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="text-white label-holder d-flex justify-content-center">
+      <label for="type" class="h4 mb-2">Type</label>
+    </div>
+    <select class="browser-default custom-select" id="type" name="style" th:field="*{type}">
+      <option th:each="type : ${T(app.animal.model.Type).values()}" th:value="${type}" th:text="${#strings.capitalize(#strings.toLowerCase(type))}">A</option>
+    </select>
+    <small th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="estimateDateOfBirth" class="h4 mb-2">Estimate Date Of Birth</label>
+    </div>
+    <input type="date" placeholder="Date" id="estimateDateOfBirth" name="estimateDateOfBirth" th:field="*{estimateDateOfBirth}">
+    <p th:if="${#fields.hasErrors('estimateDateOfBirth')}" th:errors="*{estimateDateOfBirth}" class="text-warning">Error Text Here</p>
+  </div>
+
+  <div class="form-group">
+    <div class="text-white label-holder d-flex justify-content-center">
+      <label for="gender" class="h4 mb-2">Gender</label>
+    </div>
+    <select class="browser-default custom-select" id="gender" name="style" th:field="*{gender}">
+      <option th:each="gender : ${T(app.animal.model.Gender).values()}" th:value="${gender}" th:text="${#strings.capitalize(#strings.toLowerCase(gender))}">A</option>
+    </select>
+    <small th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="text-white label-holder d-flex justify-content-center">
+      <label for="neutered" class="h4 mb-2">Is Neutered</label>
+    </div>
+    <ul>
+      <input type="checkbox" id="neutered" name="neutered" th:checked="${animalEditRequest.neutered}" />
+      Yes
+    </ul>
+    <small th:if="${#fields.hasErrors('neutered')}" th:errors="*{neutered}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="information" class="h4 mb-2">Information</label>
+    </div>
+    <input type="text" class="form-control" id="information" name="author" th:field="*{information}"/>
+    <small th:if="${#fields.hasErrors('information')}" th:errors="*{information}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="country" class="h4 mb-2">Country</label>
+    </div>
+    <input type="text" class="form-control" id="country" name="author" th:field="*{country}"/>
+    <small th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="city" class="h4 mb-2">City</label>
+    </div>
+    <input type="text" class="form-control" id="city" name="author" th:field="*{city}"/>
+    <small th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="neighborhood" class="h4 mb-2">Neighborhood</label>
+    </div>
+    <input type="text" class="form-control" id="neighborhood" name="author" th:field="*{neighborhood}"/>
+    <small th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}" class="danger" style="font-size: 15px">Error Here</small>
+  </div>
+
+
+
+
+
+
+<!--  <div>-->
+<!--    <label for="type">Type:</label>-->
+<!--    <select id="type" name="type" th:field="*{type}">-->
+<!--      <option value="">Select Type</option>-->
+<!--      <option th:each="type : ${T(app.animal.model.Type}" th:value="${type}" th:text="${type}"></option>-->
+<!--    </select>-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="name">Name:</label>-->
+<!--    <input type="text" id="name" name="name" th:field="*{name}" />-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="estimateDateOfBirth">Estimated Date of Birth:</label>-->
+<!--    <input type="date" id="estimateDateOfBirth" name="estimateDateOfBirth" th:field="*{estimateDateOfBirth}" />-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="gender">Gender:</label>-->
+<!--    <select id="gender" name="gender" th:field="*{gender}">-->
+<!--      <option value="">Select Gender</option>-->
+<!--      <option th:each="gender : ${T(app.animal.model.Gender).values()}" th:value="${gender}" th:text="${gender}"></option>-->
+<!--    </select>-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="isNeutered">Neutered:</label>-->
+<!--    <input type="checkbox" id="isNeutered" name="isNeutered" th:field="*{isNeutered}" />-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="status">Status:</label>-->
+<!--    <select id="status" name="status" th:field="*{status}">-->
+<!--      <option value="">Select Status</option>-->
+<!--      <option th:each="status : ${T(app.animal.model.Status).values()}" th:value="${status}" th:text="${status}"></option>-->
+<!--    </select>-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="information">Information:</label>-->
+<!--    <textarea id="information" name="information" th:field="*{information}"></textarea>-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="latitude">Latitude:</label>-->
+<!--    <input type="text" id="latitude" name="location.latitude" th:field="*{location.latitude}" />-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="longitude">Longitude:</label>-->
+<!--    <input type="text" id="longitude" name="location.longitude" th:field="*{location.longitude}" />-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <label for="address">Address:</label>-->
+<!--    <input type="text" id="address" name="location.address" th:field="*{location.address}" />-->
+<!--  </div>-->
+
+  <div>
+    <button type="submit">Save Animal</button>
+  </div>
+</form>
+
+</body>
+</html>

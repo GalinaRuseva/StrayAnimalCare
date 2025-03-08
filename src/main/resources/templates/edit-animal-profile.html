@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/commons::head"></head>
+<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
+<header th:replace="fragments/commons::nav"></header>
+<main>
+  <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+    <h2 class="mySticky bg-gray text-dark user" th:text="'Edit ' + ${#strings.capitalize(#strings.toLowerCase(animal.name)) + ' Profile'}"></h2>
+
+    <form th:action="@{'/animals/' + ${animal.id} + '/edit-profile'}" th:method="PUT" th:object="${animalEditRequest}">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" th:field="*{name}" />
+        <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select class="form-control" id="type" th:field="*{type}">
+          <option th:each="type : ${T(app.animal.model.Type).values()}" th:value="${type}" th:text="${#strings.capitalize(#strings.toLowerCase(type))}"></option>
+        </select>
+        <small th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select class="form-control" id="status" th:field="*{status}">
+          <option th:each="status : ${T(app.animal.model.Status).values()}" th:value="${status}" th:text="${#strings.capitalize(#strings.toLowerCase(status))}"></option>
+        </select>
+        <small th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select class="form-control" id="gender" th:field="*{gender}">
+          <option th:each="gender : ${T(app.animal.model.Gender).values()}" th:value="${gender}" th:text="${#strings.capitalize(#strings.toLowerCase(gender))}"></option>
+        </select>
+        <small th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="estimateDateOfBirth">Estimated Date of Birth</label>
+        <input type="date" class="form-control" id="estimateDateOfBirth" th:field="*{estimateDateOfBirth}" />
+        <small th:if="${#fields.hasErrors('estimateDateOfBirth')}" th:errors="*{estimateDateOfBirth}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <div class="text-white label-holder d-flex justify-content-center">
+          <label for="neutered" class="h4 mb-2">Is Neutered</label>
+        </div>
+        <ul>
+          <input type="checkbox" id="neutered" name="neutered" th:checked="${animalEditRequest.neutered}" />
+          Yes
+        </ul>
+        <small th:if="${#fields.hasErrors('neutered')}" th:errors="*{neutered}" class="danger" style="font-size: 15px">Error Here</small>
+      </div>
+
+      <div class="form-group">
+        <label for="information">Information</label>
+        <textarea class="form-control" id="information" th:field="*{information}"></textarea>
+        <small th:if="${#fields.hasErrors('information')}" th:errors="*{information}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" class="form-control" id="country" th:field="*{country}" />
+        <small th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" class="form-control" id="city" th:field="*{city}" />
+        <small th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="danger">Error message</small>
+      </div>
+
+      <div class="form-group">
+        <label for="neighborhood">Neighborhood</label>
+        <input type="text" class="form-control" id="neighborhood" th:field="*{neighborhood}" />
+        <small th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}" class="danger">Error message</small>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a th:href="@{'/animals/' + ${animal.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</main>
+<footer th:replace="fragments/commons::footer"></footer>
