@@ -10,6 +10,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class Animal {
     @Column(nullable = false)
     private Status status;
 
+    private String profilePicture;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal")
     private List<Picture> pictures = new ArrayList<>();
 
@@ -71,10 +74,22 @@ public class Animal {
     private User addedBy;
 
     public String getAge() {
+
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(estimateDateOfBirth, now);
+
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+        StringBuilder sb = new StringBuilder();
+
         if (estimateDateOfBirth == null) {
-            return "No data available";
+            return sb.append("No data available").toString();
+        } else if(years == 0) {
+            return sb.append(months).append(" m.").toString();
         } else {
-            return String.valueOf(LocalDate.now().getYear() - estimateDateOfBirth.getYear());
+             return sb.append(years).append(" y.").append(", ").append(months).append("m.").toString();
         }
     }
 

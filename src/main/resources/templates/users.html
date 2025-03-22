@@ -2,39 +2,75 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/commons::head"></head>
-<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
+<body>
 <header th:replace="fragments/commons::nav"></header>
 <main>
     <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
-        <h2 class="mySticky bg-gray text-dark user">All Users</h2>
+        <h2 class="mySticky text-dark user">All Users</h2>
 
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
+                <th>User Id</th>
                 <th>Username</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Role</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th>Change Role</th>
+                <th>Change Status</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.firstName}"></td>
-                <td th:text="${user.lastName}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.role.name()}"></td>
+                <td th:text="${user.id}"></td>
+<!--                <td th:text="${user.username}"></td>-->
+                <td>
+                    <a th:href="@{'/users/' + ${user.id} + '/profile'}" th:text="${user.username}"></a>
+                </td>
+                <td th:text="${#strings.isEmpty(user.firstName) ? 'No data available' : (#strings.capitalize(#strings.toLowerCase(user.firstName)))}"></td>
+                <td th:text="${#strings.isEmpty(user.firstName) ? 'No data available' : (#strings.capitalize(#strings.toLowerCase(user.lastName)))}"></td>
+                <td th:text="${#strings.isEmpty(user.email) ? 'No data available' : user.email}"></td>
+                <td th:text="${#strings.capitalize(#strings.toLowerCase(user.role.name()))}"></td>
                 <td th:text="${user.active} ? 'Active' : 'Inactive'"></td>
 
+<!--                <td>-->
+<!--                    <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-sm btn-primary">View Profile</a>-->
+<!--                    <form th:action="@{'/users/' + ${user.id}}" th:method="delete" style="display: inline-block;">-->
+<!--                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>-->
+<!--                    </form>-->
+<!--                </td>-->
                 <td>
-                    <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-sm btn-primary">View Profile</a>
-                    <form th:action="@{'/users/' + ${user.id}}" th:method="delete" style="display: inline-block;">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
+                    <div class="role-change">
+                        <th:block th:if="${user.role.name() == 'USER'}">
+                            <form th:action="@{'/users/' + ${user.id} + '/role'}" th:method="PUT">
+                                <button class="btn-danger btn">Set as Admin</button>
+                            </form>
+                        </th:block>
+                        <th:block th:unless="${user.role.name == 'USER'}">
+                            <form th:action="@{'/users/' + ${user.id} + '/role'}" th:method="PUT">
+                                <button class="btn-info btn">Set as User</button>
+                            </form>
+                        </th:block>
+                    </div>
                 </td>
+
+                <td>
+                    <div class="status-change">
+                        <th:block th:if="${user.active}">
+                            <form th:action="@{'/users/' + ${user.id} + '/status'}" th:method="PUT">
+                                <button class="btn-danger btn">Set Inactive</button>
+                            </form>
+                        </th:block>
+                        <th:block th:unless="${user.active}">
+                            <form th:action="@{'/users/' + ${user.id} + '/status'}" th:method="PUT">
+                                <button class="btn-info btn">Set Active</button>
+                            </form>
+                        </th:block>
+                    </div>
+                </td>
+
             </tr>
             </tbody>
         </table>

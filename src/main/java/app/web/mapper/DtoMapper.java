@@ -5,6 +5,7 @@ import app.user.model.User;
 import app.web.dto.AnimalEditRequest;
 import app.web.dto.UserEditRequest;
 import lombok.experimental.UtilityClass;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
 
@@ -16,6 +17,7 @@ public class DtoMapper {
         return UserEditRequest.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+//                .profilePicture(user.getProfilePicture())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .country(user.getLocation().getCountry())
@@ -33,6 +35,7 @@ public class DtoMapper {
                 .gender(animal.getGender())
                 .neutered(animal.isNeutered())
                 .status(animal.getStatus())
+//                .profilePicture(animal.getProfilePicture()) // commented by NR
                 .information(animal.getInformation())
                 .country(animal.getLocation().getCountry())
                 .city(animal.getLocation().getCity())

@@ -16,6 +16,7 @@
             </div>
             <input type="text" class="form-control" id="username" name="username" th:field="*{username}"/>
             <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="danger">Error message</small>
+            <small class="danger" th:text="${usernameAlreadyExistMessage}">Error message</small>
         </div>
 
 
@@ -25,6 +26,8 @@
             </div>
             <input type="password" class="form-control" id="password" name="password" th:field="*{password}"/>
             <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="danger">Error message</small>
+            <p class="alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
         </div>
 
         <div class="form-group">

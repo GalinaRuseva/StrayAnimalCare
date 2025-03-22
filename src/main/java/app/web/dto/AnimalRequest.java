@@ -11,8 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -38,6 +42,9 @@ public class AnimalRequest {
 
     private boolean neutered;
 
+    @URL(message = "Requires correct web link format")
+    private String profilePicture;
+
     @Size(max = 80, message = "Information can't have more than 80 symbols")
     private String information;
 
@@ -49,4 +56,8 @@ public class AnimalRequest {
 
     @NotBlank(message = "Neighborhood cannot be empty")
     private String neighborhood;
+
+    private MultipartFile animalProfilePicture;
+
+    private MultipartFile[] animalPictures;
 }

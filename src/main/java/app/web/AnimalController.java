@@ -1,17 +1,14 @@
 package app.web;
 
 import app.animal.model.Animal;
-import app.animal.repository.AnimalRepository;
 import app.animal.service.AnimalService;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
-import app.web.dto.ActionRequest;
-import app.web.dto.AnimalEditRequest;
-import app.web.dto.AnimalRequest;
-import app.web.dto.HealthRecordRequest;
+import app.web.dto.*;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,17 +21,16 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/animals")
+@Slf4j
 public class AnimalController {
 
     private final AnimalService animalService;
     private final UserService userService;
-    private final AnimalRepository animalRepository;
 
     @Autowired
-    public AnimalController(AnimalService animalService, UserService userService, AnimalRepository animalRepository) {
+    public AnimalController(AnimalService animalService, UserService userService) {
         this.animalService = animalService;
         this.userService = userService;
-        this.animalRepository = animalRepository;
     }
 
     @GetMapping("/new")
@@ -51,7 +47,7 @@ public class AnimalController {
     }
 
     @PostMapping
-    public ModelAndView AddNewAnimal(@Valid AnimalRequest animalRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView addNewAnimal(@Valid AnimalRequest animalRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
@@ -63,9 +59,9 @@ public class AnimalController {
             return modelAndView;
         }
 
-        animalService.createAnimal(animalRequest, user);
+        Animal animal = animalService.createAnimal(animalRequest, user);
 
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/animals/" + animal.getId() + "/profile");
     }
 
     @PostMapping("/followed/{id}")
@@ -105,7 +101,6 @@ public class AnimalController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("actionRequest", new ActionRequest());
         modelAndView.addObject("healthRecordRequest", new HealthRecordRequest());
-
         return modelAndView;
     }
 
@@ -119,13 +114,20 @@ public class AnimalController {
         modelAndView.setViewName("edit-animal-profile");
         modelAndView.addObject("user", user);
         modelAndView.addObject("animal", animal);
+        //TODO: трябва ли dto mapper тук ?
         modelAndView.addObject("animalEditRequest", DtoMapper.mapAnimalToAnimalEditRequest(animal));
-
+        modelAndView.addObject("animalEditFileUploadRequest", new AnimalEditFileUploadRequest());
+        modelAndView.addObject("animalEditProfilePictureFileUploadRequest", new SingleFileUploadRequest());
         return modelAndView;
     }
 
     @PutMapping("/{id}/edit-profile")
-    public ModelAndView updateAnimalProfile(@PathVariable UUID id, @Valid AnimalEditRequest animalEditRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView updateAnimalProfile(@PathVariable UUID id,
+                                            @Valid AnimalEditRequest animalEditRequest,
+                                            AnimalEditFileUploadRequest animalEditFileUploadRequest,
+                                            SingleFileUploadRequest singleFileUploadRequest,
+                                            BindingResult bindingResult,
+                                            @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
         User user = userService.getById(authenticationMetadata.getUserId());
         Animal animal = animalService.getById(id);
@@ -136,6 +138,8 @@ public class AnimalController {
             modelAndView.addObject("user", user);
             modelAndView.addObject("animal", animal);
             modelAndView.addObject("animalEditRequest", animalEditRequest);
+            modelAndView.addObject("animalEditFileUploadRequest", animalEditFileUploadRequest);
+            modelAndView.addObject("animalEditProfilePictureFileUploadRequest", singleFileUploadRequest);
             return modelAndView;
         }
 
@@ -156,6 +160,32 @@ public class AnimalController {
         modelAndView.addObject("allSystemAnimals", allSystemAnimals);
 
         return modelAndView;
+    }
+
+    @DeleteMapping("/{id}/picture/{pictureId}")
+    public ModelAndView deletePictureFromAnimal(@PathVariable UUID id, @PathVariable UUID pictureId) {
+        log.info("animal id {} and pictureId {}", id, pictureId);
+        animalService.deletePictureFromAnimal(pictureId);
+        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
+    }
+
+    @PostMapping("/{id}/picture")
+    public ModelAndView addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
+        log.info("animal id {} and files to upload {} ", id, animalEditFileUploadRequest.getAnimalPictures().length);
+        animalService.savePictureToAnimal(id, animalEditFileUploadRequest.getAnimalPictures());
+        return new ModelAndView("redirect:/animals/" + id + "/profile");
+    }
+
+    @DeleteMapping("/{id}/picture/profile")
+    public ModelAndView resetProfilePicture(@PathVariable UUID id){
+        this.animalService.resetProfilePicture(id);
+        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
+    }
+
+    @PutMapping("/{id}/picture/profile")
+    public ModelAndView addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+        this.animalService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
     }
 
 }

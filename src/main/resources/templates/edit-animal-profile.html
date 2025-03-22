@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/commons::head"></head>
-<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
-<header th:replace="fragments/commons::nav"></header>
+<head th:replace="~{fragments/commons::head}"></head>
+<body>
+<header th:replace="~{fragments/commons::nav}"></header>
 <main>
-  <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
-    <h2 class="mySticky bg-gray text-dark user" th:text="'Edit ' + ${#strings.capitalize(#strings.toLowerCase(animal.name)) + ' Profile'}"></h2>
+  <div class="welcome mt-1 mb-4">
+    <h2 class="mySticky text-dark user" th:text="'Edit ' + ${#strings.capitalize(#strings.toLowerCase(animal.name)) + ' Profile'}"></h2>
 
-    <form th:action="@{'/animals/' + ${animal.id} + '/edit-profile'}" th:method="PUT" th:object="${animalEditRequest}">
+    <div class="form-group">
+      <label>Profile picture</label>
+        <div>
+          <img alt="" th:src="${#strings.isEmpty(animal.profilePicture) ? 'https://www.shutterstock.com/image-illustration/cute-dog-hugs-cat-illustration-260nw-1125945152.jpg' : 'http://localhost:8081/api/v1/pictures/view/' + animal.profilePicture }" style="width: 180px" />
+        </div>
+        <th:block th:if="${#strings.isEmpty(animal.profilePicture)}">
+          <div>
+            <form th:action="@{'/animals/' + ${animal.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${animalEditProfilePictureFileUploadRequest}">
+              <label for="profilePictureFile">Add New Profile Picture</label>
+              <input type="file" id="profilePictureFile" name="file" class="form-control" />
+              <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="danger">Error message</small>
+              <button type="submit" class="btn btn-sm btn-outline-error">upload</button>
+            </form>
+          </div>
+        </th:block>
+        <th:block th:unless="${#strings.isEmpty(animal.profilePicture)}">
+          <div>
+            <form th:action="@{'/animals/' + ${animal.id} + '/picture/profile'}" th:method="DELETE">
+              <button type="submit" class="btn btn-sm btn-outline-error">delete</button>
+            </form>
+          </div>
+        </th:block>
+    </div>
+
+    <form id="edit-animal-form" th:action="@{'/animals/' + ${animal.id} + '/edit-profile'}" th:method="PUT" th:object="${animalEditRequest}">
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" th:field="*{name}" />
@@ -46,12 +70,12 @@
       </div>
 
       <div class="form-group">
-        <div class="text-white label-holder d-flex justify-content-center">
-          <label for="neutered" class="h4 mb-2">Is Neutered</label>
-        </div>
+        <label for="neutered">Is Neutered</label>
         <ul>
-          <input type="checkbox" id="neutered" name="neutered" th:checked="${animalEditRequest.neutered}" />
-          Yes
+          <li class="border-0">
+            <input type="checkbox" id="neutered" name="neutered" th:checked="${animalEditRequest.neutered}" />
+            Yes
+          </li>
         </ul>
         <small th:if="${#fields.hasErrors('neutered')}" th:errors="*{neutered}" class="danger" style="font-size: 15px">Error Here</small>
       </div>
@@ -80,9 +104,39 @@
         <small th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}" class="danger">Error message</small>
       </div>
 
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-      <a th:href="@{'/animals/' + ${animal.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
+
+
     </form>
+    <div class="form-group">
+      <div>
+        <label for="neighborhood">Gallery</label>
+      </div>
+      <div th:each="pic : ${animal.pictures}" class="d-inline-block">
+        <img alt="" th:src="${ 'http://localhost:8081/api/v1/pictures/view/' + pic.storedPictureId }" style="width: 80px" />
+        <form
+                id="delete-image-form"
+                th:method="DELETE"
+                th:action="@{'/animals/' + ${animal.id} + '/picture/' + ${pic.id}  }">
+          <button class="btn btn-sm btn-outline-error" type="submit">
+            delete
+          </button>
+        </form>
+      </div>
+      <div class="form-group">
+        <form th:action="@{'/animals/' + ${animal.id} + '/picture'}" th:method="POST" th:object="${animalEditFileUploadRequest}" enctype="multipart/form-data">
+          <div class="label-holder textCol d-flex justify-content-center">
+            <label for="neighborhood">add more pictures</label>
+          </div>
+          <input type="file" multiple class="form-control" id="animalPictures" name="animalPictures"/>
+          <small th:if="${#fields.hasErrors('animalPictures')}" th:errors="*{animalPictures}" class="danger" style="font-size: 15px">Error Here</small>
+          <button class="btn btn-sm btn-outline-error" type="submit">
+            upload
+          </button>
+        </form>
+      </div>
+    </div>
+    <button type="submit" form="edit-animal-form" class="btn btn-primary">Save Changes</button>
+    <a th:href="@{'/animals/' + ${animal.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
   </div>
 </main>
-<footer th:replace="fragments/commons::footer"></footer>
+<footer th:replace="~{fragments/commons::footer}"></footer>

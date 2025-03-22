@@ -19,7 +19,6 @@
             <a th:if="${user}" th:href="@{/animals/new}">Add Animal</a>
             <a th:if="${user}" th:href="@{/animals}">All Animals</a>
             <a th:if="${user != null && user.role.name() == 'ADMIN'}" th:href="@{/users}">All Users</a>
-            <a th:if="${user != null && user.role.name() == 'ADMIN'}" th:href="@{/reports}">Reports</a>
         </div>
 
         <div class="links">
@@ -29,9 +28,16 @@
             <li th:unless="${user}">
                 <a th:href="@{/register}">Register</a>
             </li>
-            <li th:if="${user}">
-                <a th:href="@{/logout}">Logout</a>
+            <li class="nav-item" th:if="${user}">
+                <span class="nav-link">
+                    <span th:text="${user.username}"></span> |
+                    <a th:href="@{/logout}" aria-label="Logout">Logout</a>
+                </span>
             </li>
+
+<!--            <li th:if="${user}">-->
+<!--                <a th:href="@{/logout}">Logout</a>-->
+<!--            </li>-->
         </div>
     </nav>
 </header>

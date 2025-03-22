@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/commons::head"></head>
-<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
-<header th:replace="fragments/commons::nav"></header>
+<head th:replace="~{fragments/commons::head}"></head>
+<body>
+<header th:replace="~{fragments/commons::nav}"></header>
 <main>
-  <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
-    <h2 class="mySticky bg-gray text-dark user">All Animals</h2>
+  <div class="welcome mt-1 mb-4">
+    <h2 class="mySticky text-dark user">All Animals</h2>
 
     <table class="table table-striped table-bordered">
       <thead>
@@ -16,8 +16,10 @@
         <th>Status</th>
         <th>Gender</th>
         <th>Age</th>
-        <th>Added By</th>
         <th>Location</th>
+        <th>Added By User</th>
+        <th>Go to Profile</th>
+        <th>Follow/Unfollow</th>
       </tr>
       </thead>
       <tbody>
@@ -29,25 +31,43 @@
         <td th:text="${#strings.capitalize(#strings.toLowerCase(animal.status.name()))}"></td>
         <td th:text="${#strings.capitalize(#strings.toLowerCase(animal.gender.name()))}"></td>
         <td th:text="${animal.getAge()}"></td>
-        <td>
-          <a th:href="@{'/users/' + ${user.id} + '/profile'}" th:text="${#strings.capitalize(#strings.toLowerCase(animal.addedBy.username))}"></a>
-        </td>
 <!--        <td th:text="${#strings.capitalize(#strings.toLowerCase(animal.addedBy.username))}"></td>-->
-        <td th:text="${animal.location.country + ',' + animal.location.city + ',' + animal.location.neighborhood}"></td>
+<!--        <td th:text="${animal.location.country + ',' + animal.location.city + ',' + animal.location.neighborhood}"></td>-->
+        <td th:text="${(#strings.capitalize(#strings.toLowerCase(animal.location.country))) + ', ' + (#strings.capitalize(#strings.toLowerCase(animal.location.city))) + ', ' + (#strings.capitalize(#strings.toLowerCase(animal.location.neighborhood)))}"></td>
+        <td>
+          <a th:href="@{'/users/' + ${animal.addedBy.id} + '/profile'}" th:text="${animal.addedBy.username}"></a>
+        </td>
+
         <td>
           <a th:href="@{'/animals/' + ${animal.id} + '/profile'}" class="btn btn-sm btn-primary">Profile</a>
-          <form th:action="@{'/animals/followed/' + ${animal.id}}" th:method="POST" style="display: inline-block;">
-            <button type="submit" class="btn btn-sm btn-success">Follow</button>
-          </form>
-          <form th:action="@{'/animals/' + ${animal.id}}" th:method="DELETE" style="display: inline-block;">
-            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-          </form>
+        </td>
+        <td>
+          <div class="buttons-info">
+            <div class="favorite">
+              <th:block th:if="${user.followedAnimals.contains(animal)}">
+                <form th:action="@{'/animals/followed/' + ${animal.id}}" th:method="DELETE">
+                  <button class="btn-danger btn">Unfollow</button>
+                </form>
+              </th:block>
+              <th:block th:unless="${user.followedAnimals.contains(animal)}">
+                <form th:action="@{'/animals/followed/' + ${animal.id}}" th:method="POST">
+                  <button class="btn-info btn">Follow</button>
+                </form>
+              </th:block>
+            </div>
+          </div>
+<!--          <form th:action="@{'/animals/followed/' + ${animal.id}}" th:method="POST" style="display: inline-block;">-->
+<!--            <button type="submit" class="btn btn-sm btn-success">Follow</button>-->
+<!--          </form>-->
+<!--          <form th:action="@{'/animals/' + ${animal.id}}" th:method="DELETE" style="display: inline-block;">-->
+<!--            <button type="submit" class="btn btn-sm btn-danger">Delete</button>-->
+<!--          </form>-->
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </main>
-<footer th:replace="fragments/commons::footer"></footer>
+<footer th:replace="~{fragments/commons::footer}"></footer>
 </body>
 </html>

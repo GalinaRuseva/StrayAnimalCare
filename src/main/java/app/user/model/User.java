@@ -4,6 +4,7 @@ import app.action.model.Action;
 import app.animal.model.Animal;
 import app.comment.model.Comment;
 import app.location.model.Location;
+import app.picture.model.Picture;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,7 +33,7 @@ public class User {
 
     private String lastName;
 
-    //private String profilePicture;
+    private String profilePicture;
 
     //@Column(unique = false)
     private String email;

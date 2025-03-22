@@ -2,34 +2,28 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/commons::head"></head>
-<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
+<body>
 <header th:replace="fragments/commons::nav"></header>
 <main>
-  <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+  <div class="welcome mt-1 mb-4">
 <!--    <p class="mySticky bg-gray text-dark user">All Action Comments</p>-->
-    <p class="mySticky bg-gray text-dark user" th:text="${'All Action Comments for animal' + ' ' + #strings.capitalize(#strings.toLowerCase(action.animal.name))}"></p>
-
-
+    <h3 class="mySticky text-dark user">
+      All Action Comments for animal
+      <a th:href="@{'/animals/' + ${action.animal.id} + '/profile'}"
+         th:text="${#strings.capitalize(#strings.toLowerCase(action.animal.name))}">
+      </a>
+    </h3>
+<!--    <h3 class="mySticky text-dark user" th:text="${'All Action Comments for animal' + ' ' + #strings.capitalize(#strings.toLowerCase(action.animal.name))}"></h3>-->
+<!--    <a th:href="@{'/animals/' + ${action.animal.id} + '/profile'}" th:text="${#strings.capitalize(#strings.toLowerCase(action.animal.name))}"></a>-->
 
     <div class="mt-1 mb-2">
-      <h3 th:text="'Action: ' + ${action.description}"></h3>
+      <p th:text="'Action: ' + ${action.description}"></p>
       <p th:text="'Type: ' + ${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></p>
-      <p th:text="'Date: ' + ${#temporals.format(action.createdOn, 'yyyy-MM-dd HH:mm')}"></p>
-      <p th:text="'Added by User: ' + ${#strings.capitalize(#strings.toLowerCase(action.user.username))}"></p>
-
+      <p th:text="'Date: ' + ${#temporals.format(action.createdOn, 'dd MMM YYYY HH:mm')}"></p>
+      <p th:text="'Added by User: ' + ${action.user.username}"></p>
     </div>
 
-    <div class="mt-1 mb-2">
-      <h3>Add Comment</h3>
-      <form th:action="@{'/comments/' + ${action.id} + '/new'}" th:object="${commentRequest}" th:method="POST">
-        <div class="form-group">
-          <label for="text">Comment Text:</label>
-          <textarea id="text" name="text" th:field="*{content}" class="form-control" rows="4"></textarea>
-          <small th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="danger">Error message</small>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Comment</button>
-      </form>
-    </div>
+
 
     <div class="mt-1 mb-2">
       <h3>All Comments</h3>
@@ -43,12 +37,28 @@
         </thead>
         <tbody>
         <tr th:each="comment : ${allActionComments}">
-          <td th:text="${comment.user.username}"></td>
+<!--          <td th:text="${comment.user.username}"></td>-->
+          <td>
+            <a th:href="@{'/users/' + ${user.id} + '/profile'}" th:text="${comment.user.username}"></a>
+          </td>
           <td th:text="${comment.content}"></td>
-          <td th:text="${#temporals.format(comment.createdOn, 'yyyy-MM-dd HH:mm')}"></td>
+          <td th:text="${#temporals.format(comment.createdOn, 'dd MMM YYYY HH:mm')}"></td>
         </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+  <div class="welcome mt-1 mb-4">
+    <div class="mt-1 mb-2">
+      <h3>Add Comment</h3>
+      <form th:action="@{'/comments/' + ${action.id} + '/new'}" th:object="${commentRequest}" th:method="POST">
+        <div class="form-group">
+          <label for="text">Comment Text:</label>
+          <textarea id="text" name="text" th:field="*{content}" class="form-control" rows="4"></textarea>
+          <small th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="danger">Error message</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+      </form>
     </div>
   </div>
 </main>

@@ -50,4 +50,16 @@ public class ActionService {
 
         return action.getComments();
     }
+
+    public List<Action> getAllActions() {
+
+        return actionRepository.findAll();
+    }
+
+    public List<Action> getActionsForFollowedAnimalByUserId(UUID userId) {
+
+        return actionRepository.findActionsForFollowedAnimalByUserId(userId);
+    }
+
+
 }

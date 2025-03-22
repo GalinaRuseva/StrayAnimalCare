@@ -3,18 +3,17 @@ package app.web;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.web.dto.SingleFileUploadRequest;
 import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -47,26 +46,51 @@ public class UserController {
     }
 
     @GetMapping("/{id}/profile")
-    public ModelAndView getProfileMenu(@PathVariable UUID id) {
+    public ModelAndView getProfileMenu(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.getById(id);
+        User otherUser = userService.getById(id);
+        User user = userService.getById(authenticationMetadata.getUserId());
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user-profile");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+        modelAndView.addObject("otherUser", otherUser);
+
+        if(!user.getId().equals(otherUser.getId())) {
+            modelAndView.setViewName("user-profile-other-view");
+        } else {
+            modelAndView.setViewName("user-profile");
+        }
+
+//        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
 
         return modelAndView;
     }
 
-    @PutMapping("/{id}/profile")
-    public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
+    @GetMapping("/{id}/edit-profile")
+    public ModelAndView updateUserProfile(@PathVariable UUID id,@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+//        User otherUser = userService.getById(id);
+//        User user = userService.getById(authenticationMetadata.getUserId());
+        User user = userService.getById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("edit-user-profile");
+        modelAndView.addObject("user", user);
+        //modelAndView.addObject("otherUser", otherUser);
+        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+//        modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
+        modelAndView.addObject("userEditProfilePictureFileUploadRequest", new SingleFileUploadRequest());
+        return modelAndView;
+    }
+
+    @PutMapping(path = "/{id}/edit-profile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid @ModelAttribute UserEditRequest userEditRequest, BindingResult bindingResult) {
 
         User user = userService.getById(id);
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("user-profile");
+            modelAndView.setViewName("edit-user-profile");
             modelAndView.addObject("user", user);
             modelAndView.addObject("userEditRequest", userEditRequest);
             return modelAndView;
@@ -77,8 +101,35 @@ public class UserController {
         return new ModelAndView("redirect:/users/" + user.getId() + "/profile");
     }
 
+    @PutMapping("/{id}/status")
+    public String switchUserStatus(@PathVariable UUID id) {
+
+        userService.switchStatus(id);
+
+        return "redirect:/users";
+    }
+
+    @PutMapping("/{id}/role")
+    public String switchUserRole(@PathVariable UUID id) {
+
+        userService.switchRole(id);
+
+        return "redirect:/users";
+    }
 
 
+    @DeleteMapping("/{id}/picture/profile")
+    public ModelAndView resetProfilePicture(@PathVariable UUID id){
 
+        this.userService.resetProfilePicture(id);
+        return new ModelAndView("redirect:/users/" + id + "/edit-profile");
+    }
+
+    @PutMapping("/{id}/picture/profile")
+    public ModelAndView addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+
+        this.userService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+        return new ModelAndView("redirect:/users/" + id + "/edit-profile");
+    }
 
 }

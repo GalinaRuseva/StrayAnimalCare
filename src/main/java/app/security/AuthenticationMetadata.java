@@ -38,7 +38,7 @@ public class AuthenticationMetadata implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.password;
+        return this.username;
     }
 
     @Override

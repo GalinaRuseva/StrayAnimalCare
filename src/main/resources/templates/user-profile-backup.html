@@ -13,14 +13,14 @@
             <img th:src="${#strings.isEmpty(user.profilePicture) ? 'http://localhost:8081/api/v1/pictures/view/'+ user.profilePicture : 'http://localhost:8081/api/v1/pictures/view/'+ user.profilePicture}" alt="Profile Picture" class="profile-image">
           </div>
           <div class="col">
-            <p th:text="'User Id: '+ ${user.id}"></p>
+            <p th:if="${loggedInUser.role.name() == 'ADMIN' || user.id == loggedInUser.id}" th:text="'User Id: '+ ${user.id}"></p>
             <p th:text="'Username: '+ ${user.username}"></p>
             <p th:text="'Status: '+ (${user.active} ? 'Active' : 'Inactive')"></p>
   <!--          <p th:text="'First Name: '+ ${#strings.capitalize(#strings.toLowerCase(user.firstName))}"></p>-->
             <p th:text="'First Name: '+ (${#strings.isEmpty(user.firstName) ? 'No data available' : #strings.capitalize(#strings.toLowerCase(user.firstName))})"></p>
             <p th:text="'Last Name: '+ (${#strings.isEmpty(user.lastName) ? 'No data available' : #strings.capitalize(#strings.toLowerCase(user.lastName))})"></p>
-            <p th:text="'Email: '+ (${#strings.isEmpty(user.email) ? 'No data available' : user.email})"></p>
-            <p th:text="'Phone Number: '+ (${#strings.isEmpty(user.phoneNumber) ? 'No data available' : user.phoneNumber})"></p>
+            <p th:if="${loggedInUser.role.name() == 'ADMIN' || user.id == loggedInUser.id}" th:text="'Email: '+ (${#strings.isEmpty(user.email) ? 'No data available' : user.email})"></p>
+            <p th:if="${loggedInUser.role.name() == 'ADMIN' || user.id == loggedInUser.id}" th:text="'Phone Number: '+ (${#strings.isEmpty(user.phoneNumber) ? 'No data available' : user.phoneNumber})"></p>
   <!--          <p th:text="'Last Name: '+ ${#strings.capitalize(#strings.toLowerCase(user.lastName))}"></p>-->
   <!--          <p th:text="'Email: '+ ${#strings.capitalize(#strings.toLowerCase(user.email))}"></p>-->
   <!--          <p th:text="'Phone Number: '+ ${#strings.capitalize(#strings.toLowerCase(user.email))}"></p>-->
@@ -34,7 +34,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <a th:href="@{'/users/' + ${user.id} + '/edit-profile'}" class="btn btn-primary">Edit User Profile</a>
+            <a th:if="${loggedInUser.role.name() == 'ADMIN' || user.id == loggedInUser.id}" th:href="@{'/users/' + ${user.id} + '/edit-profile'}" class="btn btn-primary">Edit User Profile</a>
           </div>
         </div>
     </div>

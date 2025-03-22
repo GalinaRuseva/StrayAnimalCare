@@ -44,12 +44,12 @@ body > nav > div.links > li {
 }
 
 body {
-    /*background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(84, 91, 98, 0.5), rgba(84, 91, 98, 0.3)), url(/img/background-1.jpg);*/
-    /*background-position: center;*/
-    /*background-attachment: fixed;*/
-    /*background-size: cover;*/
-    /*background-repeat: no-repeat;*/
-    /*margin-bottom: 5rem;*/
+    background-image: url(/img/background-1.jpg);
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-bottom: 5rem;
 }
 
 textarea {
@@ -96,9 +96,9 @@ textarea {
     z-index: 1;
 }
 
-.add-offer-form, .login {
-    width: 400px;
-}
+/*.add-offer-form, .login {*/
+/*    width: 400px;*/
+/*}*/
 
 .login:hover span {
     background-color: #5a6268;
@@ -230,7 +230,9 @@ footer {
 
 .mySticky {
     position: sticky;
-    left: 0;
+    /*left: 0;*/
+    text-align: left;
+    text-decoration: underline;
 }
 
 .image-container {
@@ -293,9 +295,9 @@ a:hover {
 }
 
 .footer-text {
-    color: white;
     font-size: 1.4em;
     font-weight: bold;
+    background-color: #f8f9fa;
 }
 
 .count, .user {
@@ -303,6 +305,7 @@ a:hover {
     padding: 0.1em 0;
 }
 
-.painting-name {
-
+.profile-image{
+    width: 300px;
+    object-fit: cover;
 }

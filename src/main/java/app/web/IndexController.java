@@ -1,5 +1,7 @@
 package app.web;
 
+import app.action.model.Action;
+import app.action.service.ActionService;
 import app.animal.model.Animal;
 import app.animal.service.AnimalService;
 import app.security.AuthenticationMetadata;
@@ -24,11 +26,15 @@ public class IndexController {
 
     private final UserService userService;
     private final AnimalService animalService;
+    private final ActionController actionController;
+    private final ActionService actionService;
 
     @Autowired
-    public IndexController(UserService userService, AnimalService animalService) {
+    public IndexController(UserService userService, AnimalService animalService, ActionController actionController, ActionService actionService) {
         this.userService = userService;
         this.animalService = animalService;
+        this.actionController = actionController;
+        this.actionService = actionService;
     }
 
     @GetMapping("/")
@@ -77,12 +83,15 @@ public class IndexController {
 
         User user = userService.getById(authenticationMetadata.getUserId());
 
-        List<Animal> allSystemAnimals = animalService.getAllSystemAnimals();
+        List<Animal> animalsNearUserLocation = animalService.getAnimalsNearUserLocation(user);
+
+        List<Action> actionsForFollowedAnimals = actionService.getActionsForFollowedAnimalByUserId(user.getId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("allSystemAnimals", allSystemAnimals);
+        modelAndView.addObject("animalsNearUserLocation", animalsNearUserLocation);
+        modelAndView.addObject("actionsForFollowedAnimals", actionsForFollowedAnimals);
 
         return modelAndView;
     }

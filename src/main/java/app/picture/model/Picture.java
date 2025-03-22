@@ -4,6 +4,7 @@ import app.animal.model.Animal;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -18,10 +19,11 @@ public class Picture {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Lob
-    private byte[] imageData;
+    private String storedPictureId;
 
-    private String title;
+    //private String pictureUniqueName;
+
+    private LocalDateTime uploadDate;
 
     @ManyToOne
     private Animal animal;
