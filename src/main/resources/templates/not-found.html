@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/commons::head"></head>
-<body style="background-image: url('/img/background-1.jpg'); background-size: cover; background-repeat: no-repeat;">
-<header th:replace="fragments/commons::nav"></header>
+<head th:replace="~{fragments/commons::head}"></head>
+<body>
+<header th:replace="~{fragments/commons::nav}"></header>
 <main>
   <div class="welcome mt-1 mb-4">
     <h2 class="mySticky text-dark user">Error code: 404 - Not Found</h2>
@@ -13,6 +13,6 @@
     </div>
   </div>
 </main>
-<footer th:replace="fragments/commons::footer"></footer>
+<footer th:replace="~{fragments/commons::footer}"></footer>
 </body>
 </html>

@@ -47,9 +47,10 @@ body {
     background-image: url(/img/background-1.jpg);
     background-position: center;
     background-attachment: fixed;
-    background-size: cover;
-    background-repeat: no-repeat;
-    margin-bottom: 5rem;
+    /*background-size: cover;*/
+    /*background-repeat: no-repeat;*/
+    background-repeat: repeat;
+    /*margin-bottom: 5rem;*/
 }
 
 textarea {
@@ -60,6 +61,7 @@ textarea {
     position: relative;
     border-radius: 12px;
     margin-top: 8em;
+    backdrop-filter: blur(15px);
     /*color: #5a6268;*/
     /*color: #b5d8f1;*/
     /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);*/
@@ -69,7 +71,6 @@ textarea {
     text-align: center;
     margin-right: auto;
     margin-left: auto;
-    /*box-shadow: 0 4px 16px black;*/
     z-index: 1;
 }
 
@@ -119,7 +120,7 @@ textarea {
 
 ul li {
     border-radius: 6px;
-    border: #5a6268 solid 2px;
+    /*border: #5a6268 solid 2px;*/
     margin: 0.1em;
 }
 

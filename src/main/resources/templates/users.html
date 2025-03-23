@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/commons::head"></head>
+<head th:replace="~{fragments/commons::head}"></head>
 <body>
-<header th:replace="fragments/commons::nav"></header>
+<header th:replace="~{fragments/commons::nav}"></header>
 <main>
     <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
         <h2 class="mySticky text-dark user">All Users</h2>
@@ -34,13 +34,6 @@
                 <td th:text="${#strings.isEmpty(user.email) ? 'No data available' : user.email}"></td>
                 <td th:text="${#strings.capitalize(#strings.toLowerCase(user.role.name()))}"></td>
                 <td th:text="${user.active} ? 'Active' : 'Inactive'"></td>
-
-<!--                <td>-->
-<!--                    <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-sm btn-primary">View Profile</a>-->
-<!--                    <form th:action="@{'/users/' + ${user.id}}" th:method="delete" style="display: inline-block;">-->
-<!--                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>-->
-<!--                    </form>-->
-<!--                </td>-->
                 <td>
                     <div class="role-change">
                         <th:block th:if="${user.role.name() == 'USER'}">

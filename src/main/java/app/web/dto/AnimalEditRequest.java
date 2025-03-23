@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -40,9 +39,6 @@ public class AnimalEditRequest {
     @NotNull(message = "You must select a status!")
     private Status status;
 
-    //@URL(message = "Requires correct web link format")
-//    private MultipartFile profilePictureFile;
-
     @Size(max = 80, message = "Information can't have more than 80 symbols")
     private String information;
 
@@ -54,5 +50,4 @@ public class AnimalEditRequest {
 
     @NotBlank(message = "Neighborhood cannot be empty")
     private String neighborhood;
-
 }

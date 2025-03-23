@@ -30,7 +30,6 @@
                         </div>
                     </div>
 
-
                 </div>
                 <div class="col">
                     <p th:text="'Name: '+ ${#strings.capitalize(#strings.toLowerCase(animal.name))}"></p>
@@ -106,7 +105,7 @@
             <div style="clear: both;"></div>
         </div>
     </div>
-    <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
+    <div class="welcome mt-1 mb-4">
         <div class="mt-1 mb-2">
             <div style="width: 49%; float: left; margin-right: 1%;">
                 <h3>Add Action</h3>
@@ -128,7 +127,7 @@
                         <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="danger">Error message</small>
                     </div>
                     <div class="button-holder d-flex justify-content-center">
-                        <button type="submit" value="Register">Add action</button>
+                        <button type="submit" class="btn btn-primary" value="Register">Add action</button>
                     </div>
                 </form>
             </div>
@@ -150,7 +149,7 @@
                         <small th:if="${#fields.hasErrors('veterinaryInformation')}" th:errors="*{veterinaryInformation}" class="danger">Error message</small>
                     </div>
                     <div class="button-holder d-flex justify-content-center">
-                        <button type="submit" value="Register">Add health record</button>
+                        <button type="submit" class="btn btn-primary" value="Register">Add health record</button>
                     </div>
                 </form>
             </div>

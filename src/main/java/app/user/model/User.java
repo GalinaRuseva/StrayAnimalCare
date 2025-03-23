@@ -65,6 +65,5 @@ public class User {
     
     @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy("createdOn DESC")
-    //@JoinTable(name = "followedAnimal_follower", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
     private List<Animal> followedAnimals = new ArrayList<>();
 }

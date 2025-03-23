@@ -38,9 +38,10 @@ public class PictureService {
 
             this.pictureRepository.deleteById(id);
             pictureClient.deletePicture(picture.getStoredPictureId());
+        } else {
+            pictureClient.deletePicture(id.toString());
         }
 
-        pictureClient.deletePicture(id.toString());
     }
 
     public String uploadPicture(MultipartFile file) {

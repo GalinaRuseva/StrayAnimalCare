@@ -61,5 +61,4 @@ public class ActionService {
         return actionRepository.findActionsForFollowedAnimalByUserId(userId);
     }
 
-
 }

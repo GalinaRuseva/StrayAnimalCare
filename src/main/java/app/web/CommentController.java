@@ -34,24 +34,6 @@ public class CommentController {
         this.actionService = actionService;
     }
 
-//    @GetMapping
-//    public ModelAndView getCommentsPage(@PathVariable UUID actionId, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-//
-//        User user = userService.getById(authenticationMetadata.getUserId());
-//
-//        Action action = actionService.getById(actionId);
-//        List<Comment> allActionComments = actionService.getAllActionComments(actionId);
-//
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("action-comment");
-//        modelAndView.addObject("action", action);
-//        modelAndView.addObject("allActionComments", allActionComments);
-//        modelAndView.addObject("user", user);
-//        modelAndView.addObject("commentRequest", new CommentRequest());
-//
-//        return modelAndView;
-//    }
-
     @PostMapping("/new")
     public ModelAndView AddNewComment(@PathVariable UUID actionId, @Valid CommentRequest commentRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 

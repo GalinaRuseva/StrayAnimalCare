@@ -3,6 +3,7 @@ package app.web.dto;
 import app.picture.model.Picture;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
@@ -24,12 +25,15 @@ public class UserEditRequest {
 
     private String phoneNumber;
 
+
     @NotBlank(message = "Country cannot be empty")
     private String country;
 
+    @NotNull
     @NotBlank(message = "City cannot be empty")
     private String city;
 
+    @NotNull
     @NotBlank(message = "Neighborhood cannot be empty")
     private String neighborhood;
 }

@@ -124,8 +124,6 @@ public class AnimalController {
     @PutMapping("/{id}/edit-profile")
     public ModelAndView updateAnimalProfile(@PathVariable UUID id,
                                             @Valid AnimalEditRequest animalEditRequest,
-                                            AnimalEditFileUploadRequest animalEditFileUploadRequest,
-                                            SingleFileUploadRequest singleFileUploadRequest,
                                             BindingResult bindingResult,
                                             @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
@@ -138,8 +136,6 @@ public class AnimalController {
             modelAndView.addObject("user", user);
             modelAndView.addObject("animal", animal);
             modelAndView.addObject("animalEditRequest", animalEditRequest);
-            modelAndView.addObject("animalEditFileUploadRequest", animalEditFileUploadRequest);
-            modelAndView.addObject("animalEditProfilePictureFileUploadRequest", singleFileUploadRequest);
             return modelAndView;
         }
 

@@ -79,10 +79,6 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
-//    public void deleteAnimalById(UUID id) {
-//        animalRepository.deleteById(id);
-//    }
-
     public void editAnimalDetails(UUID id, @Valid AnimalEditRequest animalEditRequest) {
 
         Animal animal = getById(id);
@@ -148,12 +144,5 @@ public class AnimalService {
         String storedPictureId = pictureService.uploadPicture(file);
         animal.setProfilePicture(storedPictureId);
         return this.animalRepository.save(animal);
-
-//        if (!file.isEmpty()) {
-//            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
-//            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-//                animal.setProfilePicture(pictureUpload.getBody().getId());
-//            }
-//        }
     }
 }

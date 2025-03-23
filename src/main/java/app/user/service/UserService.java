@@ -4,7 +4,6 @@ import app.animal.model.Animal;
 import app.exception.DomainException;
 import app.exception.UsernameAlreadyExistException;
 import app.location.model.Location;
-import app.picture.client.PictureClient;
 import app.picture.service.PictureService;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -140,7 +139,6 @@ public class UserService implements UserDetailsService {
         User user = getById(userId);
         user.setFirstName(userEditRequest.getFirstName());
         user.setLastName(userEditRequest.getLastName());
-
         user.setEmail(userEditRequest.getEmail());
         user.setPhoneNumber(userEditRequest.getPhoneNumber());
         user.getLocation().setCountry(userEditRequest.getCountry());

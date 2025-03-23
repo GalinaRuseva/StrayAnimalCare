@@ -19,7 +19,7 @@
             <form th:action="@{'/users/' + ${user.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${userEditProfilePictureFileUploadRequest}">
               <label for="profilePictureFile">Add New Profile Picture</label>
               <input type="file" id="profilePictureFile" name="file" class="form-control" />
-              <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="danger">Error message</small>
+<!--              <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Error message</small>-->
               <button type="submit" class="btn btn-sm btn-outline-error">upload</button>
             </form>
           </div>
@@ -28,7 +28,6 @@
           <div>
             <form th:action="@{'/users/' + ${user.id} + '/picture/profile/' + ${user.profilePicture}}" th:method="DELETE">
               <button type="submit" class="btn btn-sm btn-outline-error">delete</button>
-<!--              th:action="@{'/animals/' + ${animal.id} + '/picture/' + ${pic.id}  }">-->
             </form>
           </div>
         </th:block>
@@ -44,13 +43,13 @@
         <div class="form-group">
           <label for="firstName">First Name:</label>
           <input type="text" id="firstName" name="firstName" th:field="*{firstName}" class="form-control" />
-          <small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="danger">Error message</small>
+          <small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger">Error message</small>
 
         </div>
         <div class="form-group">
           <label for="lastName">Last Name:</label>
           <input type="text" id="lastName" name="lastName" th:field="*{lastName}" class="form-control" />
-          <small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="danger">Error message</small>
+          <small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger">Error message</small>
 
         </div>
         <div class="form-group">
@@ -62,30 +61,25 @@
         <div class="form-group">
           <label for="phoneNumber">Phone Number:</label>
           <input type="tel" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}" class="form-control" />
-          <small th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="danger">Error message</small>
+          <small th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger">Error message</small>
 
         </div>
         <div class="form-group">
           <label for="country">Country:</label>
-          <input type="text" id="country" name="country" th:field="*{country}" class="form-control" />
-          <small th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="danger">Error message</small>
+          <input type="text" id="country" name="country" th:field="*{country}" th:classappend="@{'form-control ' + ${#fields.hasErrors('country') ? 'is-invalid' : ''} }" />
+          <small th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="text-danger">Error message</small>
         </div>
         <div class="form-group">
           <label for="city">City:</label>
-          <input type="text" id="city" name="city" th:field="*{city}" class="form-control" />
-          <small th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="danger">Error message</small>
+          <input type="text" id="city" name="city" th:field="*{city}" th:classappend="@{'form-control ' + ${#fields.hasErrors('city') ? 'is-invalid' : ''} }"  />
+          <small th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="text-danger">Error message</small>
         </div>
         <div class="form-group">
           <label for="neighborhood">Neighborhood:</label>
-          <input type="text" id="neighborhood" name="neighborhood" th:field="*{neighborhood}" class="form-control" />
-          <small th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}" class="danger">Error message</small>
-
+          <input type="text" id="neighborhood" name="neighborhood" th:field="*{neighborhood}" th:classappend="@{'form-control ' + ${#fields.hasErrors('neighborhood') ? 'is-invalid' : ''} }" />
+          <small th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}" class="text-danger">Error message</small>
         </div>
-<!--        <div class="form-group">-->
-<!--          <label for="profilePictureFile">Profile Picture:</label>-->
-<!--          <input type="file" id="profilePictureFile" name="profilePictureFile" class="form-control" />-->
-<!--          <small th:if="${#fields.hasErrors('profilePictureFile')}" th:errors="*{profilePictureFile}" class="danger">Error message</small>-->
-<!--        </div>-->
+
         <button type="submit" class="btn btn-primary">Save Changes</button>
           <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
       </form>

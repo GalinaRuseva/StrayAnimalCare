@@ -60,8 +60,6 @@ public class UserController {
             modelAndView.setViewName("user-profile");
         }
 
-//        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
-
         return modelAndView;
     }
 
