@@ -5,13 +5,13 @@ import app.picture.client.PictureClient;
 import app.picture.dto.PictureUploadResponse;
 import app.picture.model.Picture;
 import app.picture.repository.PictureRepository;
-import app.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -32,17 +32,24 @@ public class PictureService {
     }
 
     public void deleteById(UUID id) {
-        this.pictureRepository.deleteById(id);
+        Optional<Picture> optionalPicture = pictureRepository.findById(id);
+        if(optionalPicture.isPresent()) {
+            Picture picture = optionalPicture.get();
+
+            this.pictureRepository.deleteById(id);
+            pictureClient.deletePicture(picture.getStoredPictureId());
+        }
+
         pictureClient.deletePicture(id.toString());
     }
 
-//    public String saveProfilePicture(MultipartFile file) {
-//        if (!file.isEmpty()) {
-//            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
-//            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-//                return pictureUpload.getBody().getId();
-//            }
-//        }
-//        throw new DomainException("Can't upload picture file");
-//    }
+    public String uploadPicture(MultipartFile file) {
+        if (!file.isEmpty()) {
+            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
+            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
+                return pictureUpload.getBody().getId();
+            }
+        }
+        throw new DomainException("Can't upload picture file");
+    }
 }

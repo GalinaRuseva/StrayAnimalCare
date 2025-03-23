@@ -32,6 +32,4 @@ public class UserEditRequest {
 
     @NotBlank(message = "Neighborhood cannot be empty")
     private String neighborhood;
-
-    private MultipartFile profilePictureFile;
 }

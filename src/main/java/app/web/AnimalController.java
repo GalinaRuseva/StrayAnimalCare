@@ -163,29 +163,31 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}/picture/{pictureId}")
-    public ModelAndView deletePictureFromAnimal(@PathVariable UUID id, @PathVariable UUID pictureId) {
-        log.info("animal id {} and pictureId {}", id, pictureId);
+    public String deletePictureFromAnimal(@PathVariable UUID id, @PathVariable UUID pictureId) {
+
         animalService.deletePictureFromAnimal(pictureId);
-        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
+        return "redirect:/animals/" + id + "/edit-profile";
     }
 
     @PostMapping("/{id}/picture")
-    public ModelAndView addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
-        log.info("animal id {} and files to upload {} ", id, animalEditFileUploadRequest.getAnimalPictures().length);
+    public String addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
+
         animalService.savePictureToAnimal(id, animalEditFileUploadRequest.getAnimalPictures());
-        return new ModelAndView("redirect:/animals/" + id + "/profile");
+        return "redirect:/animals/" + id + "/profile";
     }
 
-    @DeleteMapping("/{id}/picture/profile")
-    public ModelAndView resetProfilePicture(@PathVariable UUID id){
-        this.animalService.resetProfilePicture(id);
-        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
+    @DeleteMapping("/{id}/picture/profile/{pictureId}")
+    public String deleteProfilePicture(@PathVariable UUID id, @PathVariable UUID pictureId){
+
+        this.animalService.deleteProfilePicture(id, pictureId);
+        return "redirect:/animals/" + id + "/edit-profile";
     }
 
     @PutMapping("/{id}/picture/profile")
-    public ModelAndView addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+
         this.animalService.saveProfilePicture(id, singleFileUploadRequest.getFile());
-        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
+        return "redirect:/animals/" + id + "/edit-profile";
     }
 
 }

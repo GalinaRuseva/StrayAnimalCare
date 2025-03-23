@@ -5,7 +5,6 @@ import app.exception.DomainException;
 import app.exception.UsernameAlreadyExistException;
 import app.location.model.Location;
 import app.picture.client.PictureClient;
-import app.picture.dto.PictureUploadResponse;
 import app.picture.service.PictureService;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -16,7 +15,6 @@ import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,14 +34,12 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private  final PictureService pictureService;
-    private final PictureClient pictureClient;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PictureService pictureService, PictureClient pictureClient) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PictureService pictureService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.pictureService = pictureService;
-        this.pictureClient = pictureClient;
     }
 
     public User register(RegisterRequest registerRequest) {
@@ -130,6 +126,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DomainException("User with this username does not exist."));
         return new AuthenticationMetadata(user.getId(), username, user.getPassword(), user.getRole(), user.isActive());
     }
@@ -141,19 +138,9 @@ public class UserService implements UserDetailsService {
     public void editUserDetails(UUID userId, UserEditRequest userEditRequest) {
 
         User user = getById(userId);
-//        MultipartFile profilePictureFile = userEditRequest.getProfilePictureFile();
-//        if(!profilePictureFile.isEmpty()) {
-//            ResponseEntity<PictureUpload> pictureUploadResponse = pictureClient.pictureUpload(profilePictureFile);
-//            if(pictureUploadResponse.getStatusCode().is2xxSuccessful()){
-//                user.setProfilePicture(pictureUploadResponse.getBody().getId());
-//            }
-//        }
-
-
         user.setFirstName(userEditRequest.getFirstName());
         user.setLastName(userEditRequest.getLastName());
 
-//        user.setProfilePicture(userEditRequest.getProfilePicture());
         user.setEmail(userEditRequest.getEmail());
         user.setPhoneNumber(userEditRequest.getPhoneNumber());
         user.getLocation().setCountry(userEditRequest.getCountry());
@@ -164,28 +151,19 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public User resetProfilePicture(UUID id) {
+    public User deleteProfilePicture(UUID id, UUID pictureId) {
+
         User user = getById(id);
+        pictureService.deleteById(pictureId);
         user.setProfilePicture(null);
         return this.userRepository.save(user);
     }
 
-//    public void saveProfilePicture(UUID id, MultipartFile file) {
-//        User user = getById(id);
-//        String storedPictureId = pictureService.saveProfilePicture(file);
-//        user.setProfilePicture(storedPictureId);
-//        userRepository.save(user);
-//    }
+    public void saveProfilePicture(UUID id, MultipartFile file) {
 
-    public User saveProfilePicture(UUID id, MultipartFile file) {
         User user = getById(id);
-        if (!file.isEmpty()) {
-            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
-            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-                user.setProfilePicture(pictureUpload.getBody().getId());
-            }
-        }
-        //if the file is empty?? TO DO
-        return this.userRepository.save(user);
+        String storedPictureId = pictureService.uploadPicture(file);
+        user.setProfilePicture(storedPictureId);
+        userRepository.save(user);
     }
 }

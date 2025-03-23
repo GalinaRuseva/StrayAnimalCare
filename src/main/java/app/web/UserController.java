@@ -8,7 +8,6 @@ import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -69,21 +68,17 @@ public class UserController {
     @GetMapping("/{id}/edit-profile")
     public ModelAndView updateUserProfile(@PathVariable UUID id,@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-//        User otherUser = userService.getById(id);
-//        User user = userService.getById(authenticationMetadata.getUserId());
         User user = userService.getById(id);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("edit-user-profile");
         modelAndView.addObject("user", user);
-        //modelAndView.addObject("otherUser", otherUser);
         modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
-//        modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
         modelAndView.addObject("userEditProfilePictureFileUploadRequest", new SingleFileUploadRequest());
         return modelAndView;
     }
 
-    @PutMapping(path = "/{id}/edit-profile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PutMapping(path = "/{id}/edit-profile")
     public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid @ModelAttribute UserEditRequest userEditRequest, BindingResult bindingResult) {
 
         User user = userService.getById(id);
@@ -117,19 +112,18 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @DeleteMapping("/{id}/picture/profile/{pictureId}")
+    public ModelAndView deleteProfilePicture(@PathVariable UUID id, @PathVariable UUID pictureId){
 
-    @DeleteMapping("/{id}/picture/profile")
-    public ModelAndView resetProfilePicture(@PathVariable UUID id){
-
-        this.userService.resetProfilePicture(id);
+        this.userService.deleteProfilePicture(id, pictureId);
         return new ModelAndView("redirect:/users/" + id + "/edit-profile");
     }
 
     @PutMapping("/{id}/picture/profile")
-    public ModelAndView addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
 
         this.userService.saveProfilePicture(id, singleFileUploadRequest.getFile());
-        return new ModelAndView("redirect:/users/" + id + "/edit-profile");
+        return "redirect:/users/" + id + "/edit-profile";
     }
 
 }

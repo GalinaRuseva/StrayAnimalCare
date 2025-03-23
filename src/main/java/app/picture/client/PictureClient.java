@@ -13,10 +13,10 @@ public interface PictureClient {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<PictureUploadResponse> pictureUpload(@RequestPart(name = "picture") MultipartFile picture);
 
-    @GetMapping("/view/{pictureId:.+}")
-    ResponseEntity<byte[]> getPicture(@RequestParam(name = "pictureId") String pictureId);
+//    @GetMapping("/view/{pictureId:.+}")
+//    ResponseEntity<byte[]> getPicture(@RequestParam(name = "pictureId") String pictureId);
 
-    @DeleteMapping
-    ResponseEntity<Void> deletePicture(@RequestParam(name = "pictureId") String pictureId);
+    @DeleteMapping("/{pictureId:.+}")
+    ResponseEntity<Void> deletePicture(@PathVariable String pictureId);
 
 }

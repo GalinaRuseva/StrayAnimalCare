@@ -30,13 +30,11 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final PictureService pictureService;
     // TODO: maybe move pictureCLient to pictureService
-    private final PictureClient pictureClient;
 
     @Autowired
-    public AnimalService(AnimalRepository animalRepository, PictureService pictureService, PictureClient pictureClient) {
+    public AnimalService(AnimalRepository animalRepository, PictureService pictureService) {
         this.animalRepository = animalRepository;
         this.pictureService = pictureService;
-        this.pictureClient = pictureClient;
     }
 
     public Animal createAnimal(AnimalRequest animalRequest, User user) {
@@ -54,7 +52,6 @@ public class AnimalService {
                 .gender(animalRequest.getGender())
                 .isNeutered(animalRequest.isNeutered())
                 .status(Status.STRAY)
-//                .profilePicture(animalRequest.getProfilePicture())
                 .information(animalRequest.getInformation())
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
@@ -63,10 +60,8 @@ public class AnimalService {
                 .build();
 
         if (!animalRequest.getAnimalProfilePicture().isEmpty()) {
-            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(animalRequest.getAnimalProfilePicture());
-            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-                animal.setProfilePicture(pictureUpload.getBody().getId());
-            }
+            String storedPictureId = pictureService.uploadPicture(animalRequest.getAnimalProfilePicture());
+            animal.setProfilePicture(storedPictureId);
         }
 
         animalRepository.save(animal);
@@ -104,7 +99,6 @@ public class AnimalService {
         animal.setGender(animalEditRequest.getGender());
         animal.setNeutered(animalEditRequest.isNeutered());
         animal.setStatus(animalEditRequest.getStatus());
-//        animal.setProfilePicture(animalEditRequest.getProfilePicture());
         animal.setInformation(animalEditRequest.getInformation());
         animal.setUpdatedOn(LocalDateTime.now());
         animal.setLocation(location);
@@ -122,38 +116,44 @@ public class AnimalService {
     }
 
     public void savePictureToAnimal(UUID id, MultipartFile[] files) {
+
         Animal animal = getById(id);
         Arrays.stream(files).forEach(animalPicture -> {
             if (!animalPicture.isEmpty()) {
-                ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(animalPicture);
-                if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-                    Picture build = Picture.builder()
-                            .animal(animal)
-                            .storedPictureId(pictureUpload.getBody().getId()).build();
-                    pictureService.save(build);
-                }
+
+                String storedPictureId = pictureService.uploadPicture(animalPicture);
+                Picture build = Picture.builder()
+                        .animal(animal)
+                        .uploadDate(LocalDateTime.now())
+                        .storedPictureId(storedPictureId).build();
+                pictureService.save(build);
             }
         });
+
     }
 
     public void deletePictureFromAnimal(UUID pictureId) {
         this.pictureService.deleteById(pictureId);
     }
 
-    public Animal resetProfilePicture(UUID id) {
+    public Animal deleteProfilePicture(UUID id, UUID pictureId) {
         Animal animal = getById(id);
+        pictureService.deleteById(pictureId);
         animal.setProfilePicture(null);
         return this.animalRepository.save(animal);
     }
 
     public Animal saveProfilePicture(UUID id, MultipartFile file) {
         Animal animal = getById(id);
-        if (!file.isEmpty()) {
-            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
-            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
-                animal.setProfilePicture(pictureUpload.getBody().getId());
-            }
-        }
+        String storedPictureId = pictureService.uploadPicture(file);
+        animal.setProfilePicture(storedPictureId);
         return this.animalRepository.save(animal);
+
+//        if (!file.isEmpty()) {
+//            ResponseEntity<PictureUploadResponse> pictureUpload = pictureClient.pictureUpload(file);
+//            if (pictureUpload.getStatusCode().is2xxSuccessful()) {
+//                animal.setProfilePicture(pictureUpload.getBody().getId());
+//            }
+//        }
     }
 }

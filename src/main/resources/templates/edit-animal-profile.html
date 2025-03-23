@@ -25,7 +25,7 @@
         </th:block>
         <th:block th:unless="${#strings.isEmpty(animal.profilePicture)}">
           <div>
-            <form th:action="@{'/animals/' + ${animal.id} + '/picture/profile'}" th:method="DELETE">
+            <form th:action="@{'/animals/' + ${animal.id} + '/picture/profile/'+ ${animal.profilePicture}}" th:method="DELETE">
               <button type="submit" class="btn btn-sm btn-outline-error">delete</button>
             </form>
           </div>
@@ -116,7 +116,7 @@
         <form
                 id="delete-image-form"
                 th:method="DELETE"
-                th:action="@{'/animals/' + ${animal.id} + '/picture/' + ${pic.id}  }">
+                th:action="@{'/animals/' + ${animal.id} + '/picture/' + ${pic.id}}">
           <button class="btn btn-sm btn-outline-error" type="submit">
             delete
           </button>
