@@ -12,7 +12,8 @@
       <div class="form-group">
         <label>Profile picture</label>
         <div>
-          <img alt="" th:src="${#strings.isEmpty(user.profilePicture) ? 'https://www.shutterstock.com/image-illustration/cute-dog-hugs-cat-illustration-260nw-1125945152.jpg' : 'http://localhost:8081/api/v1/pictures/view/' + user.profilePicture }" style="width: 180px" />
+          <img alt="" th:src="${#strings.isEmpty(user.profilePicture) ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : 'http://localhost:8081/api/v1/pictures/view/' + user.profilePicture }" style="width: 180px" />
+
         </div>
         <th:block th:if="${#strings.isEmpty(user.profilePicture)}">
           <div>

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -41,6 +42,6 @@ public class Action {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "action")
     @OrderBy("createdOn DESC")
-    private List<Comment> comments;
+    private List<Comment> comments= new ArrayList<>();
 
 }

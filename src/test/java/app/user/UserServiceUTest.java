@@ -18,22 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -321,6 +312,25 @@ public class UserServiceUTest {
         //then
         assertThat(user.getFollowedAnimals()).isEmpty();
         assertFalse(user.getFollowedAnimals().contains(animal));
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void givenUsersWithStatusActiveAndLastLoginBeforeThreeMonths_whenDeactivateInactiveUsers_thenUsersStatusBecomeInactive() {
+
+        // Given
+        User user = User.builder()
+                .id(UUID.randomUUID())
+                .isActive(true)
+                .lastLogin(LocalDateTime.now().minusMonths(3))
+                .build();
+        when(userRepository.findUsersByLastLoginBeforeAndActive(LocalDateTime.now().minusMonths(3))).thenReturn(List.of(user));
+
+        // When
+        List<User> usersWithoutLoginMoreThanThreeMonths = userService.getUsersWithoutLoginMoreThanThreeMonths();
+
+        // Then
+        assertFalse(user.isActive());
         verify(userRepository, times(1)).save(user);
     }
 

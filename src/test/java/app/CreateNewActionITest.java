@@ -65,7 +65,7 @@ public class CreateNewActionITest {
 
         //given
         RegisterRequest registerRequest = RegisterRequest.builder()
-                .username("nikolay")
+                .username("nikolay123")
                 .password("123123")
                 .country("Bulgaria")
                 .city("Sofia")
@@ -76,7 +76,7 @@ public class CreateNewActionITest {
 
         Animal animal = Animal.builder()
                 .type(Type.CAT)
-                .name("Mishi")
+                .name("Mishi123")
                 .estimateDateOfBirth(LocalDate.of(2021, 12, 15))
                 .gender(Gender.FEMALE)
                 .isNeutered(true)

@@ -1,7 +1,6 @@
 package app.user.repository;
 
 import app.user.model.User;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u" +
             " WHERE u.lastLogin < :lastLogin" +
-            " AND  u.isActive = true")
+            " AND  u.isActive = true" +
+            " AND u.role != 'ADMIN'")
     List<User> findUsersByLastLoginBeforeAndActive(@Param(value = "lastLogin") LocalDateTime lastLogin);
 }
