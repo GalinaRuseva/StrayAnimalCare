@@ -15,40 +15,40 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class ExceptionAdvice {
-//
-//    @ExceptionHandler(UsernameAlreadyExistException.class)
-//    public String handleUsernameAlreadyExist(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-//
-//        String username = request.getParameter("username");
-//        String message = "%s already exist!".formatted(username);
-//
-//        redirectAttributes.addFlashAttribute("usernameAlreadyExistMessage", message);
-//
-//        return "redirect:/register";
-//    }
-//
-//
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    @ExceptionHandler({
-//            AccessDeniedException.class,
-//            NoResourceFoundException.class,
-//            MethodArgumentTypeMismatchException.class,
-//            MissingRequestValueException.class
-//    })
-//    public ModelAndView handlerNotFoundExceptions() {
-//
-//        return new ModelAndView("not-found");
-//    }
-//
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler(Exception.class)
-//    public ModelAndView handleAnyException(Exception exception) {
-//
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("internal-server-error");
-//        modelAndView.addObject("errorMessage", exception.getClass().getSimpleName());
-//
-//        return modelAndView;
-//    }
+
+    @ExceptionHandler(UsernameAlreadyExistException.class)
+    public String handleUsernameAlreadyExist(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        String username = request.getParameter("username");
+        String message = "%s already exist!".formatted(username);
+
+        redirectAttributes.addFlashAttribute("usernameAlreadyExistMessage", message);
+
+        return "redirect:/register";
+    }
+
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({
+            AccessDeniedException.class,
+            NoResourceFoundException.class,
+            MethodArgumentTypeMismatchException.class,
+            MissingRequestValueException.class
+    })
+    public ModelAndView handlerNotFoundExceptions() {
+
+        return new ModelAndView("not-found");
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAnyException(Exception exception) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("internal-server-error");
+        modelAndView.addObject("errorMessage", exception.getClass().getSimpleName());
+
+        return modelAndView;
+    }
 
 }

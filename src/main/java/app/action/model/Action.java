@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -16,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Action {
 
     @Id
@@ -40,4 +42,5 @@ public class Action {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "action")
     @OrderBy("createdOn DESC")
     private List<Comment> comments;
+
 }

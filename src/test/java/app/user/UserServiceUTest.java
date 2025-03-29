@@ -4,6 +4,7 @@ import app.animal.model.Animal;
 import app.animal.service.AnimalService;
 import app.exception.DomainException;
 import app.exception.UsernameAlreadyExistException;
+import app.location.model.Location;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.model.UserRole;
@@ -52,8 +53,6 @@ public class UserServiceUTest {
     @InjectMocks
     private UserService userService;
 
-    // Test Case: When there is no user in the database (repository returns Optional.empty()) -
-    // then expect an exception of type DomainException is thrown
     @Test
     void givenMissingUserFromDatabase_whenEditUserDetails_thenExceptionIsThrown() {
 
@@ -64,8 +63,6 @@ public class UserServiceUTest {
         assertThrows(DomainException.class, () -> userService.editUserDetails(userId, dto));
     }
 
-    // Test Case: When database returns user object -> then change their details from the dto
-    // and save the user to the database
     @Test
     void givenExistingUser_whenEditTheirProfile_thenChangeTheirDetailsAndSaveToDatabase() {
         //given
@@ -73,15 +70,23 @@ public class UserServiceUTest {
         UserEditRequest dto = UserEditRequest.builder()
                 .firstName("Galina")
                 .lastName("Ruseva")
-                //.profilePicture("0b1d7db8-d10c-4496-9597-8c04c20bee07")
                 .email("galina@gmail.com")
                 .phoneNumber("0899991112222")
                 .country("Bulgaria")
                 .city("Sofia")
                 .neighborhood("Izgrev")
-                //.profilePictureFile()
                 .build();
-        User user = User.builder().build();
+
+        Location location = Location.builder()
+                .country("Bulgaria")
+                .city("Sofia")
+                .neighborhood("Mladost")
+                .build();
+
+        User user = User.builder()
+                .username("galina")
+                .location(location)
+                .build();
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // When
@@ -98,8 +103,7 @@ public class UserServiceUTest {
         verify(userRepository, times(1)).save(user);
     }
 
-    // Register
-    // Test 1: When user exist with this username -> exception is thrown
+
     @Test
     void givenExistingUsername_whenRegister_thenExceptionIsThrown() {
 
@@ -143,7 +147,6 @@ public class UserServiceUTest {
         assertThat(registeredUser.getUsername()).isEqualTo(registerRequest.getUsername());
     }
 
-    // Test 1: When user exist - then return new AuthenticationMetadata
     @Test
     void givenExistingUser_whenLoadUserByUsername_thenReturnCorrectAuthenticationMetadata() {
 
@@ -220,7 +223,6 @@ public class UserServiceUTest {
         assertThat(user.getRole()).isEqualTo(UserRole.USER);
     }
 
-    // Switch status method
     @Test
     void givenUserWithStatusActive_whenSwitchStatus_thenUserStatusBecomeInactive() {
 
@@ -284,10 +286,10 @@ public class UserServiceUTest {
                 .followedAnimals(new ArrayList<>())
                 .build();
 
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+//        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         //when
-        userService.followAnimal(animal, user.getId());
+        userService.followAnimal(animal, user);
 
         //then
         assertThat(animal).isEqualTo(user.getFollowedAnimals().get(0));

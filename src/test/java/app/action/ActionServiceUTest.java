@@ -6,11 +6,11 @@ import app.action.repository.ActionRepository;
 import app.action.service.ActionService;
 import app.animal.model.Animal;
 import app.comment.model.Comment;
-import app.comment.repository.CommentRepository;
-import app.comment.service.CommentService;
 import app.exception.DomainException;
+import app.healthRecord.model.HealthRecord;
 import app.user.model.User;
 import app.web.dto.ActionRequest;
+import app.web.dto.HealthRecordRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -33,10 +33,6 @@ public class ActionServiceUTest {
 
     @Mock
     private ActionRepository actionRepository;
-//    @Mock
-//    private CommentRepository commentRepository;
-//    @Mock
-//    private CommentService commentService;
 
     @InjectMocks
     private ActionService actionService;

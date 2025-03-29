@@ -10,8 +10,11 @@ import app.picture.dto.PictureUploadResponse;
 import app.picture.model.Picture;
 import app.picture.service.PictureService;
 import app.user.model.User;
+import app.web.dto.AnimalEditFileUploadRequest;
 import app.web.dto.AnimalEditRequest;
 import app.web.dto.AnimalRequest;
+import app.web.dto.SingleFileUploadRequest;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,13 +32,13 @@ public class AnimalService {
 
     private final AnimalRepository animalRepository;
     private final PictureService pictureService;
-    // TODO: maybe move pictureCLient to pictureService
 
     @Autowired
     public AnimalService(AnimalRepository animalRepository, PictureService pictureService) {
         this.animalRepository = animalRepository;
         this.pictureService = pictureService;
     }
+
 
     public Animal createAnimal(AnimalRequest animalRequest, User user) {
 
@@ -59,13 +62,19 @@ public class AnimalService {
                 .addedBy(user)
                 .build();
 
-        if (!animalRequest.getAnimalProfilePicture().isEmpty()) {
+        animalRepository.save(animal);
+
+        if (animalRequest.getProfilePicture() != null && !animalRequest.getAnimalProfilePicture().isEmpty()) {
             String storedPictureId = pictureService.uploadPicture(animalRequest.getAnimalProfilePicture());
             animal.setProfilePicture(storedPictureId);
         }
 
-        animalRepository.save(animal);
-        savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());
+        if (animalRequest.getAnimalPictures() != null && animalRequest.getAnimalPictures().length > 0) {
+            savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());
+        }
+
+//        animalRepository.save(animal);
+//        savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());
         return animal;
     }
 
@@ -114,17 +123,21 @@ public class AnimalService {
     public void savePictureToAnimal(UUID id, MultipartFile[] files) {
 
         Animal animal = getById(id);
-        Arrays.stream(files).forEach(animalPicture -> {
-            if (!animalPicture.isEmpty()) {
 
-                String storedPictureId = pictureService.uploadPicture(animalPicture);
-                Picture build = Picture.builder()
-                        .animal(animal)
-                        .uploadDate(LocalDateTime.now())
-                        .storedPictureId(storedPictureId).build();
-                pictureService.save(build);
-            }
-        });
+        if(files != null && files.length > 0) {
+
+            Arrays.stream(files).forEach(animalPicture -> {
+                if (!animalPicture.isEmpty()) {
+
+                    String storedPictureId = pictureService.uploadPicture(animalPicture);
+                    Picture build = Picture.builder()
+                            .animal(animal)
+                            .uploadDate(LocalDateTime.now())
+                            .storedPictureId(storedPictureId).build();
+                    pictureService.save(build);
+                }
+            });
+        }
 
     }
 

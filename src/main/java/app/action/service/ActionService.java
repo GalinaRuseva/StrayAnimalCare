@@ -26,7 +26,7 @@ public class ActionService {
         this.actionRepository = actionRepository;
     }
 
-    public void createNewAction(User user, Animal animal, ActionRequest actionRequest) {
+    public Action createNewAction(User user, Animal animal, ActionRequest actionRequest) {
 
         Action action = Action.builder()
                 .user(user)
@@ -37,6 +37,8 @@ public class ActionService {
                 .build();
 
         actionRepository.save(action);
+
+        return action;
     }
 
     public Action getById(UUID id) {

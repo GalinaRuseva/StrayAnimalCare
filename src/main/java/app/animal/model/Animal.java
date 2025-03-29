@@ -22,6 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

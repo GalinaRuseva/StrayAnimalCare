@@ -26,14 +26,12 @@ public class IndexController {
 
     private final UserService userService;
     private final AnimalService animalService;
-    private final ActionController actionController;
     private final ActionService actionService;
 
     @Autowired
-    public IndexController(UserService userService, AnimalService animalService, ActionController actionController, ActionService actionService) {
+    public IndexController(UserService userService, AnimalService animalService, ActionService actionService) {
         this.userService = userService;
         this.animalService = animalService;
-        this.actionController = actionController;
         this.actionService = actionService;
     }
 

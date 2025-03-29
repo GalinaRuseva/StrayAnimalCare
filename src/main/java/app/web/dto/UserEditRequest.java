@@ -25,7 +25,6 @@ public class UserEditRequest {
 
     private String phoneNumber;
 
-
     @NotBlank(message = "Country cannot be empty")
     private String country;
 

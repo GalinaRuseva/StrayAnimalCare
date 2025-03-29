@@ -20,6 +20,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "table-users")
+//@Table(name = "users")
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -55,6 +58,8 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedOn;
+
+    private LocalDateTime lastLogin;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @OrderBy("createdOn DESC")

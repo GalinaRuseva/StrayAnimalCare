@@ -10,10 +10,13 @@ import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
 import app.web.dto.RegisterRequest;
+import app.web.dto.SingleFileUploadRequest;
 import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,13 +25,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, ApplicationListener<AuthenticationSuccessEvent> {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -100,9 +105,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void followAnimal(Animal animal, UUID userId) {
+    public void followAnimal(Animal animal, User user) {
 
-        User user = getById(userId);
+//        User user = getById(userId);
+
+        if (user.getFollowedAnimals() == null) {
+            user.setFollowedAnimals(new ArrayList<>());
+        }
 
         boolean isAlreadyFollowed = user.getFollowedAnimals().contains(animal);
 
@@ -157,11 +166,43 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(user);
     }
 
-    public void saveProfilePicture(UUID id, MultipartFile file) {
+    public User saveProfilePicture(UUID id, SingleFileUploadRequest singleFileUploadRequest) {
 
         User user = getById(id);
-        String storedPictureId = pictureService.uploadPicture(file);
+        String storedPictureId = pictureService.uploadPicture(singleFileUploadRequest.getFile());
         user.setProfilePicture(storedPictureId);
-        userRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    public List<User> getUsersWithoutLoginMoreThanThreeMonths() {
+
+        LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
+        List<User> inactiveUsers = userRepository.findUsersByLastLoginBeforeAndActive(threeMonthsAgo);
+
+        return inactiveUsers;
+    }
+
+//    public void updateLastLoginDate(UUID userId) {
+//
+//        User user = getById(userId);
+//        user.setLastLogin(LocalDateTime.now());
+//        userRepository.save(user);
+//    }
+
+    @Override
+    public void onApplicationEvent(AuthenticationSuccessEvent event) {
+        AuthenticationMetadata userDetails = (AuthenticationMetadata) event.getAuthentication().getPrincipal();
+
+        UUID userId = userDetails.getUserId();
+        User user = getById(userId);
+
+        if (user != null) {
+            user.setLastLogin(LocalDateTime.now());
+            userRepository.save(user);
+            log.info("Login success: {} ", event);
+            log.info("Updated lastLogin for user with Id [%s]".formatted(user.getId()));
+        } else {
+            log.warn("User not found: {}", userDetails.getUsername());
+        }
     }
 }

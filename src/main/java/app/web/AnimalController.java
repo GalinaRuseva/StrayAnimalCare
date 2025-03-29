@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class AnimalController {
 
         Animal animal = animalService.getById(id);
 
-        userService.followAnimal(animal, user.getId());
+        userService.followAnimal(animal, user);
 
         return "redirect:/home";
     }
@@ -180,9 +181,9 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}/picture/profile")
-    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+    public String addProfilePicture(@PathVariable UUID id, MultipartFile file){
 
-        this.animalService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+        this.animalService.saveProfilePicture(id, file);
         return "redirect:/animals/" + id + "/edit-profile";
     }
 

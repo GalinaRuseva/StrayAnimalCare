@@ -95,6 +95,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public String switchUserStatus(@PathVariable UUID id) {
 
         userService.switchStatus(id);
@@ -103,6 +104,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
     public String switchUserRole(@PathVariable UUID id) {
 
         userService.switchRole(id);
@@ -120,8 +122,15 @@ public class UserController {
     @PutMapping("/{id}/picture/profile")
     public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
 
-        this.userService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+        this.userService.saveProfilePicture(id, singleFileUploadRequest);
         return "redirect:/users/" + id + "/edit-profile";
     }
+
+    //@PutMapping("/{id}/picture/profile")
+    //    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+    //
+    //        this.userService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+    //        return "redirect:/users/" + id + "/edit-profile";
+    //    }
 
 }
