@@ -23,6 +23,16 @@
             <small th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger">Error Here</small>
         </div>
 
+<!--                <div class="form-group">-->
+<!--                    <label for="animal-type">Type</label>-->
+<!--                    <select id="animal-type" name="type" th:field="*{type}" required>-->
+<!--                        <option value="">Select animal type</option>-->
+<!--                        <option value="CAT">Cat</option>-->
+<!--                        <option value="DOG">Dog</option>-->
+<!--                    </select>-->
+<!--                    <p class="alert-warning" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>-->
+<!--                </div>-->
+
         <div class="form-group">
             <label for="estimateDateOfBirth">Estimate Date Of Birth</label>
             <div>

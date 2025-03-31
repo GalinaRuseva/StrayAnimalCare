@@ -16,7 +16,10 @@
       <p th:text="'Action: ' + ${action.description}"></p>
       <p th:text="'Type: ' + ${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></p>
       <p th:text="'Date: ' + ${#temporals.format(action.createdOn, 'dd MMM YYYY HH:mm')}"></p>
-      <p th:text="'Added by User: ' + ${action.user.username}"></p>
+      <p>
+        Added by User:
+        <a th:href="@{'/users/' + ${action.user.getId()} + '/profile'}" th:text="${action.user.username}"></a>
+      </p>
     </div>
   </div>
   <div class="welcome mt-1 mb-4">

@@ -17,11 +17,13 @@
         </div>
         <th:block th:if="${#strings.isEmpty(user.profilePicture)}">
           <div>
-            <form th:action="@{'/users/' + ${user.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${userEditProfilePictureFileUploadRequest}">
+            <form th:action="@{'/users/' + ${user.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${singleFileUploadRequest}">
               <label for="profilePictureFile">Add New Profile Picture</label>
-              <input type="file" id="profilePictureFile" name="file" class="form-control" />
-<!--              <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Error message</small>-->
-              <button type="submit" class="btn btn-sm btn-outline-error">upload</button>
+              <input type="file" id="profilePictureFile" name="file" th:field="*{file}" class="form-control" />
+              <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Error message</small>
+<!--              <small class="danger" th:text="${noFileSelectedMessage}">Error message</small>-->
+
+              <button type="submit" class="btn btn-sm btn-outline-error">Upload</button>
             </form>
           </div>
         </th:block>

@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exception.NoFileSelectedForUploadException;
 import app.exception.UsernameAlreadyExistException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,6 @@ public class ExceptionAdvice {
         return "redirect:/register";
     }
 
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             AccessDeniedException.class,
@@ -50,5 +50,16 @@ public class ExceptionAdvice {
 
         return modelAndView;
     }
+
+//    @ExceptionHandler(NoFileSelectedForUploadException.class)
+//    public String handleNoFileSelectedForUploadException(RedirectAttributes redirectAttributes, HttpServletRequest request, NoFileSelectedForUploadException exception) {
+//
+//        String userId = request.getParameter("id");
+//        String message = exception.getMessage();
+//
+//        redirectAttributes.addFlashAttribute("noFileSelectedMessage", message);
+//
+//        return "redirect:/users/" + userId + "/edit-profile";
+//    }
 
 }

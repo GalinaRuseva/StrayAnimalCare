@@ -311,3 +311,7 @@ a:hover {
     width: 300px;
     object-fit: cover;
 }
+
+.no-underline {
+    text-decoration: none;
+}

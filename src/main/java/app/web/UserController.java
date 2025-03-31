@@ -6,12 +6,14 @@ import app.user.service.UserService;
 import app.web.dto.SingleFileUploadRequest;
 import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
+import app.web.validators.FileInputValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,10 +25,12 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final FileInputValidator fileInputValidator;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FileInputValidator fileInputValidator) {
         this.userService = userService;
+        this.fileInputValidator = fileInputValidator;
     }
 
     @GetMapping
@@ -72,12 +76,12 @@ public class UserController {
         modelAndView.setViewName("edit-user-profile");
         modelAndView.addObject("user", user);
         modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
-        modelAndView.addObject("userEditProfilePictureFileUploadRequest", new SingleFileUploadRequest());
+        modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
         return modelAndView;
     }
 
     @PutMapping(path = "/{id}/edit-profile")
-    public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid @ModelAttribute UserEditRequest userEditRequest, BindingResult bindingResult) {
+    public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
 
         User user = userService.getById(id);
 
@@ -85,6 +89,7 @@ public class UserController {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("edit-user-profile");
             modelAndView.addObject("user", user);
+            modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
             modelAndView.addObject("userEditRequest", userEditRequest);
             return modelAndView;
         }
@@ -120,10 +125,23 @@ public class UserController {
     }
 
     @PutMapping("/{id}/picture/profile")
-    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
+    public ModelAndView addProfilePicture(@PathVariable UUID id, @Validated SingleFileUploadRequest singleFileUploadRequest, BindingResult bindingResult){
+
+        User user = userService.getById(id);
+        fileInputValidator.validate(singleFileUploadRequest, bindingResult); // Use the validator
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("edit-user-profile");
+            modelAndView.addObject("user", user);
+//            modelAndView.addObject("userEditRequest", userEditRequest);
+            modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+            modelAndView.addObject("singleFileUploadRequest", singleFileUploadRequest);
+            return modelAndView;
+        }
 
         this.userService.saveProfilePicture(id, singleFileUploadRequest);
-        return "redirect:/users/" + id + "/edit-profile";
+        return new ModelAndView("redirect:/users/" + id + "/edit-profile");
     }
 
     //@PutMapping("/{id}/picture/profile")

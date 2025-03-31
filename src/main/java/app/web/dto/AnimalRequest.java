@@ -42,9 +42,6 @@ public class AnimalRequest {
 
     private boolean neutered;
 
-    @URL(message = "Requires correct web link format")
-    private String profilePicture;
-
     @Size(max = 80, message = "Information can't have more than 80 symbols")
     private String information;
 

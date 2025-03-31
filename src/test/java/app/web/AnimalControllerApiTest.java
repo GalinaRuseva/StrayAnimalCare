@@ -7,6 +7,8 @@ import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
+import app.web.validators.FileInputValidator;
+import app.web.validators.MultipleFilesUploadValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,6 +34,10 @@ public class AnimalControllerApiTest {
     private AnimalService animalService;
     @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private FileInputValidator fileInputValidator;
+    @MockitoBean
+    private MultipleFilesUploadValidator multipleFilesUploadValidator;
 
     @Autowired
     private MockMvc mockMvc;

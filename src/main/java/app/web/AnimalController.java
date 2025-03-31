@@ -7,14 +7,16 @@ import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.*;
 import app.web.mapper.DtoMapper;
+import app.web.validators.FileInputValidator;
+import app.web.validators.MultipleFilesUploadValidator;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -27,11 +29,16 @@ public class AnimalController {
 
     private final AnimalService animalService;
     private final UserService userService;
+    private final FileInputValidator fileInputValidator;
+    private final MultipleFilesUploadValidator multipleFilesUploadValidator;
+
 
     @Autowired
-    public AnimalController(AnimalService animalService, UserService userService) {
+    public AnimalController(AnimalService animalService, UserService userService, FileInputValidator fileInputValidator, MultipleFilesUploadValidator multipleFilesUploadValidator) {
         this.animalService = animalService;
         this.userService = userService;
+        this.fileInputValidator = fileInputValidator;
+        this.multipleFilesUploadValidator = multipleFilesUploadValidator;
     }
 
     @GetMapping("/new")
@@ -115,10 +122,9 @@ public class AnimalController {
         modelAndView.setViewName("edit-animal-profile");
         modelAndView.addObject("user", user);
         modelAndView.addObject("animal", animal);
-        //TODO: трябва ли dto mapper тук ?
         modelAndView.addObject("animalEditRequest", DtoMapper.mapAnimalToAnimalEditRequest(animal));
-        modelAndView.addObject("animalEditFileUploadRequest", new AnimalEditFileUploadRequest());
-        modelAndView.addObject("animalEditProfilePictureFileUploadRequest", new SingleFileUploadRequest());
+        modelAndView.addObject("animalEditFilesUploadRequest", new AnimalEditFilesUploadRequest());
+        modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
         return modelAndView;
     }
 
@@ -166,13 +172,6 @@ public class AnimalController {
         return "redirect:/animals/" + id + "/edit-profile";
     }
 
-    @PostMapping("/{id}/picture")
-    public String addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
-
-        animalService.savePictureToAnimal(id, animalEditFileUploadRequest.getAnimalPictures());
-        return "redirect:/animals/" + id + "/profile";
-    }
-
     @DeleteMapping("/{id}/picture/profile/{pictureId}")
     public String deleteProfilePicture(@PathVariable UUID id, @PathVariable UUID pictureId){
 
@@ -180,11 +179,65 @@ public class AnimalController {
         return "redirect:/animals/" + id + "/edit-profile";
     }
 
-    @PutMapping("/{id}/picture/profile")
-    public String addProfilePicture(@PathVariable UUID id, MultipartFile file){
+    // @PutMapping("/{id}/picture/profile")
+    //    public String addProfilePicture(@PathVariable UUID id, MultipartFile file){
+    //
+    //        this.animalService.saveProfilePicture(id, file);
+    //        return "redirect:/animals/" + id + "/edit-profile";
+    //    }
 
-        this.animalService.saveProfilePicture(id, file);
-        return "redirect:/animals/" + id + "/edit-profile";
+    @PostMapping("/{id}/picture/profile")
+    public ModelAndView addProfilePicture(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @Validated SingleFileUploadRequest singleFileUploadRequest, BindingResult bindingResult){
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        Animal animal = animalService.getById(id);
+
+        fileInputValidator.validate(singleFileUploadRequest, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("edit-animal-profile");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("animal", animal);
+            modelAndView.addObject("animalEditRequest", DtoMapper.mapAnimalToAnimalEditRequest(animal));
+            modelAndView.addObject("animalEditFilesUploadRequest", new AnimalEditFilesUploadRequest());
+            modelAndView.addObject("singleFileUploadRequest", singleFileUploadRequest);
+            return modelAndView;
+        }
+
+        this.animalService.saveProfilePicture(id, singleFileUploadRequest.getFile());
+        return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
     }
+
+    //    @PostMapping("/{id}/picture")
+//    public String addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
+//
+//        animalService.savePictureToAnimal(id, animalEditFileUploadRequest.getAnimalPictures());
+//        return "redirect:/animals/" + id + "/profile";
+//    }
+
+    @PostMapping("/{id}/picture")
+    public ModelAndView addPicturesToAnimal(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @Valid AnimalEditFilesUploadRequest animalEditFilesUploadRequest, BindingResult bindingResult){
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        Animal animal = animalService.getById(id);
+
+        multipleFilesUploadValidator.validate(animalEditFilesUploadRequest, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("edit-animal-profile");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("animal", animal);
+            modelAndView.addObject("animalEditRequest", DtoMapper.mapAnimalToAnimalEditRequest(animal));
+            modelAndView.addObject("animalEditFilesUploadRequest", animalEditFilesUploadRequest);
+            modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
+            return modelAndView;
+        }
+
+        animalService.savePictureToAnimal(id, animalEditFilesUploadRequest.getAnimalPictures());
+        return new ModelAndView("redirect:/animals/" + id + "/profile");
+    }
+
 
 }

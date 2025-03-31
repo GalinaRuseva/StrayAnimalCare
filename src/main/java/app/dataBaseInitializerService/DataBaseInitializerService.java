@@ -9,8 +9,11 @@ import app.animal.model.Status;
 import app.animal.model.Type;
 import app.animal.repository.AnimalRepository;
 import app.animal.service.AnimalService;
+import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
 import app.comment.service.CommentService;
+import app.healthRecord.model.HealthRecord;
+import app.healthRecord.repository.HealthRecordRepository;
 import app.location.model.Location;
 import app.picture.repository.PictureRepository;
 import app.picture.service.PictureService;
@@ -40,17 +43,18 @@ public class DataBaseInitializerService implements CommandLineRunner {
     private final CommentRepository commentRepository;
     private final PictureRepository pictureRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final HealthRecordRepository healthRecordRepository;
 
 
     @Autowired
-    public DataBaseInitializerService(UserRepository userRepository, AnimalRepository animalRepository, ActionRepository actionRepository, CommentRepository commentRepository, PictureRepository pictureRepository, PasswordEncoder passwordEncoder) {
+    public DataBaseInitializerService(UserRepository userRepository, AnimalRepository animalRepository, ActionRepository actionRepository, CommentRepository commentRepository, PictureRepository pictureRepository, PasswordEncoder passwordEncoder, HealthRecordRepository healthRecordRepository) {
         this.userRepository = userRepository;
         this.animalRepository = animalRepository;
         this.actionRepository = actionRepository;
         this.commentRepository = commentRepository;
         this.pictureRepository = pictureRepository;
         this.passwordEncoder = passwordEncoder;
+        this.healthRecordRepository = healthRecordRepository;
     }
 
     @Override
@@ -69,7 +73,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Location location2 = Location.builder()
                 .country("Bulgaria")
                 .city("Sofia")
-                .neighborhood("Mladost 2")
+                .neighborhood("Lozenets")
                 .build();
 
         Location location3 = Location.builder()
@@ -306,16 +310,139 @@ public class DataBaseInitializerService implements CommandLineRunner {
                 .user(userNikolay)
                 .animal(animalMaks)
                 .type(app.action.model.Type.OTHER)
-                .description("Maks has new god hose!")
-                .createdOn(LocalDateTime.now())
+                .description("Maks has new dog house!")
+                .createdOn(LocalDateTime.now().minusHours(6))
                 .comments(new ArrayList<>())
                 .build();
 
         actionRepository.save(actionMaksNewHouse);
 
-        // add comment to action
+        // add comments to action actionMishiAntiparasitic
+
+        Comment commentRostislav = Comment.builder()
+                .content("Thank you for protecting her!")
+                .user(userRostislav)
+                .createdOn(LocalDateTime.now().minusHours(1))
+                .action(actionMishiAntiparasitic)
+                .build();
+
+        commentRepository.save(commentRostislav);
 
 
+        Comment commentGalina = Comment.builder()
+                .content("I will give her next dose after 3 months.")
+                .user(userGalina)
+                .createdOn(LocalDateTime.now())
+                .action(actionMishiAntiparasitic)
+                .build();
 
+        commentRepository.save(commentGalina);
+
+
+        // add comments to action actionBobiFed
+
+        Comment commentGalina1 = Comment.builder()
+                .content("Good to you!")
+                .user(userGalina)
+                .createdOn(LocalDateTime.now().minusHours(2))
+                .action(actionBobiFed)
+                .build();
+
+        commentRepository.save(commentGalina1);
+
+        Comment commentRostislav1 = Comment.builder()
+                .content("No worries. But can you please feed him this evening?")
+                .user(userRostislav)
+                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(25))
+                .action(actionBobiFed)
+                .build();
+
+        commentRepository.save(commentRostislav1);
+
+
+        Comment commentGalina2 = Comment.builder()
+                .content("Of course, I will feed him!")
+                .user(userGalina)
+                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(15))
+                .action(actionBobiFed)
+                .build();
+
+        commentRepository.save(commentGalina2);
+
+        // add comments to action actionMaksNewHouse
+
+        Comment commentGalina3 = Comment.builder()
+                .content("Very nice house, did he liked it?")
+                .user(userGalina)
+                .createdOn(LocalDateTime.now().minusHours(5).minusMinutes(14))
+                .action(actionMaksNewHouse)
+                .build();
+
+        commentRepository.save(commentGalina3);
+
+        Comment commentNikolay = Comment.builder()
+                .content("Thanks! Yes, he loves it.")
+                .user(userNikolay)
+                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(2))
+                .action(actionMaksNewHouse)
+                .build();
+
+        commentRepository.save(commentNikolay);
+
+
+        Comment commentRostislav3 = Comment.builder()
+                .content("Great!")
+                .user(userRostislav)
+                .createdOn(LocalDateTime.now().minusHours(1))
+                .action(actionMaksNewHouse)
+                .build();
+
+        commentRepository.save(commentRostislav3);
+
+        // add health record for Mishi
+        HealthRecord healthRecordMishi = HealthRecord.builder()
+                .animal(animalMishi)
+                .createdOn(LocalDateTime.now())
+                .description("Routine physical examination. Vital signs within normal limits. Good overall condition. No abnormalities observed.")
+                .veterinaryInformation("Dr. Dimitrov, Vet clinik, Bulgaria, Sofia.")
+                .build();
+
+        healthRecordRepository.save(healthRecordMishi);
+
+        // add health record for Bobi
+        HealthRecord healthRecordBobi = HealthRecord.builder()
+                .animal(animalBobi)
+                .createdOn(LocalDateTime.now())
+                .description("Wound cleaned and dressed, healing as expected, follow-up appointment scheduled.")
+                .veterinaryInformation("Dr. Dimitrov, Vet clinik, Bulgaria, Sofia.")
+                .build();
+
+        healthRecordRepository.save(healthRecordBobi);
+
+        // add health record for Maks
+        HealthRecord healthRecordMaks = HealthRecord.builder()
+                .animal(animalMaks)
+                .createdOn(LocalDateTime.now())
+                .description("Routine physical examination. Vital signs within normal limits. Good overall condition. No abnormalities observed.")
+                .veterinaryInformation("Dr. Dimitrov, Vet clinik, Bulgaria, Sofia.")
+                .build();
+
+        healthRecordRepository.save(healthRecordMaks);
+
+        // following animals
+        userGalina.getFollowedAnimals().add(animalMishi);
+        userGalina.getFollowedAnimals().add(animalBobi);
+        userGalina.getFollowedAnimals().add(animalMaks);
+        userRepository.save(userGalina);
+
+        userRostislav.getFollowedAnimals().add(animalMishi);
+        userRostislav.getFollowedAnimals().add(animalBobi);
+        userRostislav.getFollowedAnimals().add(animalMaks);
+        userRepository.save(userRostislav);
+
+        userNikolay.getFollowedAnimals().add(animalMishi);
+        userNikolay.getFollowedAnimals().add(animalBobi);
+        userNikolay.getFollowedAnimals().add(animalMaks);
+        userRepository.save(userNikolay);
     }
 }

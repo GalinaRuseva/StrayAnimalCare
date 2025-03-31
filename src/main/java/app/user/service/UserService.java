@@ -180,13 +180,6 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
         return inactiveUsers;
     }
 
-//    public void updateLastLoginDate(UUID userId) {
-//
-//        User user = getById(userId);
-//        user.setLastLogin(LocalDateTime.now());
-//        userRepository.save(user);
-//    }
-
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         AuthenticationMetadata userDetails = (AuthenticationMetadata) event.getAuthentication().getPrincipal();
@@ -200,7 +193,7 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
             log.info("Login success: {} ", event);
             log.info("Updated lastLogin for user with Id [%s]".formatted(user.getId()));
         } else {
-            log.warn("User not found: {}", userDetails.getUsername());
+            log.warn("User not found: [%s]".formatted(userDetails.getUsername()));
         }
     }
 }

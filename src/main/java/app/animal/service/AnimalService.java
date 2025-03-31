@@ -5,21 +5,15 @@ import app.animal.model.Status;
 import app.animal.repository.AnimalRepository;
 import app.exception.DomainException;
 import app.location.model.Location;
-import app.picture.client.PictureClient;
-import app.picture.dto.PictureUploadResponse;
 import app.picture.model.Picture;
 import app.picture.service.PictureService;
 import app.user.model.User;
-import app.web.dto.AnimalEditFileUploadRequest;
 import app.web.dto.AnimalEditRequest;
 import app.web.dto.AnimalRequest;
-import app.web.dto.SingleFileUploadRequest;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,12 +56,14 @@ public class AnimalService {
                 .addedBy(user)
                 .build();
 
-        animalRepository.save(animal);
+//        animalRepository.save(animal);
 
-        if (animalRequest.getProfilePicture() != null && !animalRequest.getAnimalProfilePicture().isEmpty()) {
+        if (animalRequest.getAnimalProfilePicture() != null && !animalRequest.getAnimalProfilePicture().isEmpty()) {
             String storedPictureId = pictureService.uploadPicture(animalRequest.getAnimalProfilePicture());
             animal.setProfilePicture(storedPictureId);
         }
+
+        animalRepository.save(animal);
 
         if (animalRequest.getAnimalPictures() != null && animalRequest.getAnimalPictures().length > 0) {
             savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());

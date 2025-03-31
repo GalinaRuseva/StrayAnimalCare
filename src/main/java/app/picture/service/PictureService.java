@@ -1,6 +1,7 @@
 package app.picture.service;
 
 import app.exception.DomainException;
+import app.exception.NoFileSelectedForUploadException;
 import app.picture.client.PictureClient;
 import app.picture.dto.PictureUploadResponse;
 import app.picture.model.Picture;
@@ -51,6 +52,6 @@ public class PictureService {
                 return pictureUpload.getBody().getId();
             }
         }
-        throw new DomainException("Can't upload picture file");
+        throw new NoFileSelectedForUploadException("Please select file to upload");
     }
 }

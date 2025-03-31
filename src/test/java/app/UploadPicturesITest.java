@@ -68,6 +68,7 @@ public class UploadPicturesITest {
 
         User user = userService.register(registerRequest);
 
+
         SingleFileUploadRequest singleFileUploadRequest = SingleFileUploadRequest.builder()
                 .file(profilePicture)
                 .build();
