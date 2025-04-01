@@ -3,8 +3,6 @@ package app.location.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Builder
 @Getter
 @Setter

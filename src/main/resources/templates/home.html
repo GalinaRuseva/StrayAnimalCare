@@ -27,7 +27,7 @@
                         </td>
                         <td>
                             <a th:href="@{'/actions/' + ${action.id}}"
-                               th:text="${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></a>
+                               th:text="${#strings.capitalize(#strings.toLowerCase(action.type.toString()))}"></a>
                         </td>
                         <td>
                             <a th:href="@{'/animals/' + ${action.animal.id} + '/profile'}"
@@ -112,8 +112,6 @@
                         <td>
                             <span
                                     th:text="${(#strings.capitalize(#strings.toLowerCase(animal.location.country))) + ', ' + (#strings.capitalize(#strings.toLowerCase(animal.location.city))) + ', ' + (#strings.capitalize(#strings.toLowerCase(animal.location.neighborhood)))}"></span>
-                                <!--                                th:text="${animal.location.country + ', ' + animal.location.city + ', ' + animal.location.neighborhood}"></span>-->
-
                         </td>
                         <td>
                             <div class="buttons-info">

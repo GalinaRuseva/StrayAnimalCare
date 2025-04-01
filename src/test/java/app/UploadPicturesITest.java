@@ -56,7 +56,6 @@ public class UploadPicturesITest {
     void givenActiveUser_whenUploadProfilePicture_thenUserIsSavedWithProfilePicture() {
         // Given
         MultipartFile profilePicture = new MockMultipartFile("profilePicture", "profile.jpg", "image/jpeg", "profile data".getBytes());
-        //MultipartFile[] animalPictures = {new MockMultipartFile("picture1", "pic1.jpg", "image/jpeg", "pic1 data".getBytes())};
 
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .username("Valentin")
@@ -79,69 +78,9 @@ public class UploadPicturesITest {
 
         // When
         User userWithPic = userService.saveProfilePicture(user.getId(), singleFileUploadRequest);
-//        userService.saveProfilePicture(user, singleFileUploadRequest);
-        // Then
-//        assertEquals(pictureId.toString(), user.getProfilePicture());
 
+        // Then
         assertNotNull(userWithPic.getProfilePicture());
     }
-
-
-    //@Test
-    //    void givenAnimalRequest_whenCreateAnimal_thenAnimalIsSavedWithPictures() {
-    //        // Given
-    //        MultipartFile profilePicture = new MockMultipartFile("profile", "profile.jpg", "image/jpeg", "profile data".getBytes());
-    //        MultipartFile[] animalPictures = {new MockMultipartFile("picture1", "pic1.jpg", "image/jpeg", "pic1 data".getBytes())};
-    //
-    //        AnimalRequest animalRequest = AnimalRequest.builder()
-    //                .type(Type.DOG)
-    //                .name("Maks")
-    //                .estimateDateOfBirth(LocalDate.now().minusYears(2))
-    //                .gender(Gender.MALE)
-    //                .neutered(true)
-    //                .information("Big and friendly black dog")
-    //                .country("Bulgaria")
-    //                .city("Sofia")
-    //                .neighborhood("Izgrev")
-    //                //.animalProfilePicture(profilePicture)
-    //                //.animalPictures(animalPictures)
-    //                .build();
-    //
-    //        RegisterRequest registerRequest = RegisterRequest.builder()
-    //                .username("Valentin")
-    //                .password("123456")
-    //                .country("Bulgaria")
-    //                .city("Sofia")
-    //                .neighborhood("Izgrev")
-    //                .build();
-    //
-    //        User user = userService.register(registerRequest);
-    //
-    //        when(pictureService.uploadPicture(any(MultipartFile.class))).thenReturn(UUID.randomUUID().toString());
-    ////        when(pictureService.uploadPicture(profilePicture)).thenReturn(UUID.randomUUID().toString());
-    ////        when(pictureService.uploadPicture(any(MultipartFile.class))).thenReturn(UUID.randomUUID().toString());
-    //
-    //        // When
-    //        Animal animal = animalService.createAnimal(animalRequest, user);
-    //
-    //        // Then
-    //        assertNotNull(animal);
-    //        assertNotNull(animal.getId());
-    //        assertEquals(animalRequest.getName(), animal.getName());
-    //        assertEquals(animalRequest.getType(), animal.getType());
-    //
-    //        Animal retrievedAnimal = animalRepository.findById(animal.getId()).orElse(null);
-    //        assertNotNull(retrievedAnimal);
-    //        assertEquals(animal.getId(), retrievedAnimal.getId());
-    //
-    ////        Picture savedPicture = pictureRepository.findByAnimal(retrievedAnimal).get(0);
-    ////        assertNotNull(savedPicture);
-    ////        assertNotNull(savedPicture.getStoredPictureId());
-    //
-    ////        userRepository.delete(user);
-    ////        pictureRepository.delete(savedPicture);
-    ////        animalRepository.delete(retrievedAnimal);
-    //    }
-
 
 }

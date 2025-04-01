@@ -8,12 +8,16 @@ import app.location.model.Location;
 import app.picture.model.Picture;
 import app.picture.service.PictureService;
 import app.user.model.User;
+import app.web.dto.AdoptionEvent;
 import app.web.dto.AnimalEditRequest;
 import app.web.dto.AnimalRequest;
+import app.web.dto.NeuteredEvent;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,8 +60,6 @@ public class AnimalService {
                 .addedBy(user)
                 .build();
 
-//        animalRepository.save(animal);
-
         if (animalRequest.getAnimalProfilePicture() != null && !animalRequest.getAnimalProfilePicture().isEmpty()) {
             String storedPictureId = pictureService.uploadPicture(animalRequest.getAnimalProfilePicture());
             animal.setProfilePicture(storedPictureId);
@@ -69,8 +71,6 @@ public class AnimalService {
             savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());
         }
 
-//        animalRepository.save(animal);
-//        savePictureToAnimal(animal.getId(), animalRequest.getAnimalPictures());
         return animal;
     }
 
@@ -154,4 +154,25 @@ public class AnimalService {
         animal.setProfilePicture(storedPictureId);
         return this.animalRepository.save(animal);
     }
+
+    @Async
+    @EventListener
+    public void changeAnimalStatusWhenAdopted(AdoptionEvent adoptionEvent) {
+
+        Animal adoptedAnimal = getById(adoptionEvent.getAnimalId());
+        adoptedAnimal.setStatus(Status.ADOPTED);
+        animalRepository.save(adoptedAnimal);
+        log.info("Animal with name [%s] and id [%s] is adopted!".formatted(adoptedAnimal.getName(), adoptedAnimal.getId()));
+    }
+
+    @Async
+    @EventListener
+    public void changeAnimalInfoToNeutered(NeuteredEvent neuteredEvent) {
+
+        Animal neuteredAnimal = getById(neuteredEvent.getAnimalId());
+        neuteredAnimal.setNeutered(true);
+        animalRepository.save(neuteredAnimal);
+        log.info("Animal with name [%s] and id [%s] is neutered".formatted(neuteredAnimal.getName(), neuteredAnimal.getId()));
+    }
+
 }

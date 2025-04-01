@@ -25,7 +25,6 @@
             <tbody>
             <tr th:each="user : ${users}">
                 <td th:text="${user.id}"></td>
-<!--                <td th:text="${user.username}"></td>-->
                 <td>
                     <a th:href="@{'/users/' + ${user.id} + '/profile'}" th:text="${user.username}"></a>
                 </td>

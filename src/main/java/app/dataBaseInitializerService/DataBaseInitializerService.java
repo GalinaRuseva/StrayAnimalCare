@@ -2,29 +2,20 @@ package app.dataBaseInitializerService;
 
 import app.action.model.Action;
 import app.action.repository.ActionRepository;
-import app.action.service.ActionService;
 import app.animal.model.Animal;
 import app.animal.model.Gender;
 import app.animal.model.Status;
 import app.animal.model.Type;
 import app.animal.repository.AnimalRepository;
-import app.animal.service.AnimalService;
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
-import app.comment.service.CommentService;
 import app.healthRecord.model.HealthRecord;
 import app.healthRecord.repository.HealthRecordRepository;
 import app.location.model.Location;
 import app.picture.repository.PictureRepository;
-import app.picture.service.PictureService;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
-import app.user.service.UserService;
-import app.web.dto.ActionRequest;
-import app.web.dto.AnimalRequest;
-import app.web.dto.RegisterRequest;
-import app.web.dto.UserEditRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -143,6 +134,26 @@ public class DataBaseInitializerService implements CommandLineRunner {
 
         userRepository.save(userNikolay);
 
+        //create User with role USER, active before 3 months
+        User userVladislav = User.builder()
+                .username("vladislav")
+                .password(passwordEncoder.encode("123123"))
+                .firstName("Vladislav")
+                .lastName("Petkov")
+                .email("vladislav@gmail.com")
+                .phoneNumber("089233440666")
+                .role(UserRole.USER)
+                .isActive(true)
+                .createdOn(LocalDateTime.now())
+                .updatedOn(LocalDateTime.now())
+                .lastLogin(LocalDateTime.now().minusMonths(4))
+                .actions(new ArrayList<>())
+                .location(location2)
+                .followedAnimals(new ArrayList<>())
+                .build();
+
+        userRepository.save(userVladislav);
+
         // create animal - Mishi
         Animal animalMishi = Animal.builder()
                 .type(Type.CAT)
@@ -169,7 +180,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
                 .name("Bobi")
                 .estimateDateOfBirth(LocalDate.now().minusYears(2).minusMonths(3))
                 .gender(Gender.MALE)
-                .isNeutered(true)
+                .isNeutered(false)
                 .status(Status.STRAY)
                 .pictures(new ArrayList<>())
                 .information("Grey cat, with green eyes")
@@ -189,7 +200,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
                 .name("Maks")
                 .estimateDateOfBirth(LocalDate.now().minusYears(1).minusMonths(4))
                 .gender(Gender.MALE)
-                .isNeutered(true)
+                .isNeutered(false)
                 .status(Status.STRAY)
                 .pictures(new ArrayList<>())
                 .information("Very friendly and nice dog.")
@@ -311,7 +322,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
                 .animal(animalMaks)
                 .type(app.action.model.Type.OTHER)
                 .description("Maks has new dog house!")
-                .createdOn(LocalDateTime.now().minusHours(6))
+                .createdOn(LocalDateTime.now())
                 .comments(new ArrayList<>())
                 .build();
 
@@ -322,7 +333,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentRostislav = Comment.builder()
                 .content("Thank you for protecting her!")
                 .user(userRostislav)
-                .createdOn(LocalDateTime.now().minusHours(1))
+                .createdOn(LocalDateTime.now())
                 .action(actionMishiAntiparasitic)
                 .build();
 
@@ -344,7 +355,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentGalina1 = Comment.builder()
                 .content("Good to you!")
                 .user(userGalina)
-                .createdOn(LocalDateTime.now().minusHours(2))
+                .createdOn(LocalDateTime.now())
                 .action(actionBobiFed)
                 .build();
 
@@ -353,7 +364,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentRostislav1 = Comment.builder()
                 .content("No worries. But can you please feed him this evening?")
                 .user(userRostislav)
-                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(25))
+                .createdOn(LocalDateTime.now())
                 .action(actionBobiFed)
                 .build();
 
@@ -363,7 +374,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentGalina2 = Comment.builder()
                 .content("Of course, I will feed him!")
                 .user(userGalina)
-                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(15))
+                .createdOn(LocalDateTime.now())
                 .action(actionBobiFed)
                 .build();
 
@@ -374,7 +385,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentGalina3 = Comment.builder()
                 .content("Very nice house, did he liked it?")
                 .user(userGalina)
-                .createdOn(LocalDateTime.now().minusHours(5).minusMinutes(14))
+                .createdOn(LocalDateTime.now())
                 .action(actionMaksNewHouse)
                 .build();
 
@@ -383,7 +394,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentNikolay = Comment.builder()
                 .content("Thanks! Yes, he loves it.")
                 .user(userNikolay)
-                .createdOn(LocalDateTime.now().minusHours(1).minusMinutes(2))
+                .createdOn(LocalDateTime.now())
                 .action(actionMaksNewHouse)
                 .build();
 
@@ -393,7 +404,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         Comment commentRostislav3 = Comment.builder()
                 .content("Great!")
                 .user(userRostislav)
-                .createdOn(LocalDateTime.now().minusHours(1))
+                .createdOn(LocalDateTime.now())
                 .action(actionMaksNewHouse)
                 .build();
 

@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
@@ -23,7 +20,7 @@ public class InactiveUsersCheckScheduler {
         this.userService = userService;
     }
 
-    @Scheduled(cron = "0 0 2 * * *") // Runs daily at 2:00 AM
+    @Scheduled(cron = "0 0/3 * * * ?") // Runs every 3 minutes
     public void deactivateInactiveUsers() {
 
         List<User> inactiveUsers = userService.getUsersWithoutLoginMoreThanThreeMonths();

@@ -179,13 +179,6 @@ public class AnimalController {
         return "redirect:/animals/" + id + "/edit-profile";
     }
 
-    // @PutMapping("/{id}/picture/profile")
-    //    public String addProfilePicture(@PathVariable UUID id, MultipartFile file){
-    //
-    //        this.animalService.saveProfilePicture(id, file);
-    //        return "redirect:/animals/" + id + "/edit-profile";
-    //    }
-
     @PostMapping("/{id}/picture/profile")
     public ModelAndView addProfilePicture(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @Validated SingleFileUploadRequest singleFileUploadRequest, BindingResult bindingResult){
 
@@ -208,13 +201,6 @@ public class AnimalController {
         this.animalService.saveProfilePicture(id, singleFileUploadRequest.getFile());
         return new ModelAndView("redirect:/animals/" + id + "/edit-profile");
     }
-
-    //    @PostMapping("/{id}/picture")
-//    public String addPictureToAnimal(@PathVariable UUID id, AnimalEditFileUploadRequest animalEditFileUploadRequest){
-//
-//        animalService.savePictureToAnimal(id, animalEditFileUploadRequest.getAnimalPictures());
-//        return "redirect:/animals/" + id + "/profile";
-//    }
 
     @PostMapping("/{id}/picture")
     public ModelAndView addPicturesToAnimal(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @Valid AnimalEditFilesUploadRequest animalEditFilesUploadRequest, BindingResult bindingResult){

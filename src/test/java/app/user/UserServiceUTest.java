@@ -315,26 +315,4 @@ public class UserServiceUTest {
         verify(userRepository, times(1)).save(user);
     }
 
-//    @Test
-//    void givenUsersWithStatusActiveAndLastLoginBeforeThreeMonths_whenDeactivateInactiveUsers_thenUsersStatusBecomeInactive() {
-//
-//        // Given
-//        User user = User.builder()
-//                .id(UUID.randomUUID())
-//                .isActive(true)
-//                .lastLogin(LocalDateTime.now().minusMonths(4))
-//                .build();
-//        when(userRepository.findUsersByLastLoginBeforeAndActive(LocalDateTime.now().minusMonths(3))).thenReturn(List.of(user));
-//
-//        // When
-////        List<User> usersWithoutLoginMoreThanThreeMonths = userService.getUsersWithoutLoginMoreThanThreeMonths();
-//        userService.switchStatus(user.getId());
-//
-//        // Then
-////        assertEquals(usersWithoutLoginMoreThanThreeMonths.get(0).getId(), user.getId());
-//        assertFalse(user.isActive());
-//        verify(userRepository, times(1)).save(user);
-//    }
-
-
 }

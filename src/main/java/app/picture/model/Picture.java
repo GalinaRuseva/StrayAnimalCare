@@ -21,8 +21,6 @@ public class Picture {
 
     private String storedPictureId;
 
-    //private String pictureUniqueName;
-
     private LocalDateTime uploadDate;
 
     @ManyToOne

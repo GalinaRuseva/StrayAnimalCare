@@ -53,7 +53,6 @@ public class TestBuilders {
         Action action = Action.builder()
                 .id(UUID.randomUUID())
                 .animal(animal)
-//                .user(user)
                 .type(app.action.model.Type.FED)
                 .createdOn(LocalDateTime.now())
                 .build();
@@ -98,7 +97,4 @@ public class TestBuilders {
 
         return animal;
     }
-
-
-
 }

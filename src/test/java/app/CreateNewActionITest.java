@@ -56,10 +56,6 @@ public class CreateNewActionITest {
     @Autowired
     private UserRepository userRepository;
 
-    //what do I need to create action
-    // - register user
-    // - add new animal
-
     @Test
     void createNewAction_happyPath() {
 
@@ -96,16 +92,12 @@ public class CreateNewActionITest {
         //when
         Action action = actionService.createNewAction(registeredUser, animal, actionRequest);
 
-
         //then
         Optional<Action> optionalAction = actionRepository.findById(action.getId());
         Action result = optionalAction.get();
         List<Action> all = actionRepository.findAll();
 
         assertEquals(result.getId(), action.getId());
-//        assertThat(all.size(), is(1));
-//        assertEquals(result.getAnimal(), action.getAnimal());
-//        assertEquals(result.getType(), action.getType());
     }
 
 

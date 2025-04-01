@@ -24,7 +24,7 @@
                             <span>Other pictures</span>
                             <div>
                                 <span th:each="pic : ${animal.pictures}">
-                                        <img alt="" th:src="${ 'http://localhost:8081/api/v1/pictures/view/' + pic.storedPictureId }" style="width: 80px" />
+                                        <img alt="" th:src="${ 'http://localhost:8081/api/v1/pictures/view/' + pic.storedPictureId }" style="width: 140px" />
                                 </span>
                             </div>
                         </div>
@@ -72,9 +72,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="action : ${animal.actions}">
-<!--                        <td th:class="${action.type.name() == 'PARASITE_PROTECTED' ? 'no-underline' : ''}"-->
-<!--                            th:text="${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></td>-->
-                        <td th:text="${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(action.type.toString()))}"></td>
                         <td th:text="${#strings.capitalize(#strings.toLowerCase(action.description))}"></td>
                         <td th:text="${#temporals.format(action.createdOn, 'dd MMM YYYY HH:mm')}"></td>
                         <td>
@@ -113,15 +111,6 @@
             <div style="width: 49%; float: left; margin-right: 1%;">
                 <h3>Add Action</h3>
                 <form class="add-form" th:method="POST" th:action="@{'/actions/' + ${animal.id} + '/new'}" th:object="${actionRequest}">
-<!--                    <div class="form-group">-->
-<!--                        <div class="label-holder d-flex justify-content-center">-->
-<!--                            <label for="type" class="h4 mb-2">Type</label>-->
-<!--                        </div>-->
-<!--                        <select class="browser-default custom-select" id="type" name="type" th:field="*{type}">-->
-<!--                            <option th:each="type : ${T(app.action.model.Type).values()}" th:value="${type}" th:text="${#strings.capitalize(#strings.toLowerCase(type))}"></option>-->
-<!--                        </select>-->
-<!--                        <small th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="danger" style="font-size: 15px">Error Here</small>-->
-<!--                    </div>-->
                     <div class="form-group">
                         <div class="label-holder d-flex justify-content-center">
                             <label for="type" class="h4 mb-2">Type</label>
@@ -130,7 +119,6 @@
                             <option value="">Select action type</option>
                             <option value="VACCINATED">Vaccinated</option>
                             <option value="PARASITE_PROTECTED">Parasite protected</option>
-                            <option value="SPAYED">Spayed</option>
                             <option value="NEUTERED">Neutered</option>
                             <option value="ADOPTED">Adopted</option>
                             <option value="OTHER">Other</option>

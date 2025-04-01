@@ -75,8 +75,6 @@ public class CreateNewAnimalITest {
                 .country("Bulgaria")
                 .city("Sofia")
                 .neighborhood("Izgrev")
-                //.animalProfilePicture(profilePicture)
-                //.animalPictures(animalPictures)
                 .build();
 
         RegisterRequest registerRequest = RegisterRequest.builder()
@@ -90,8 +88,6 @@ public class CreateNewAnimalITest {
         User user = userService.register(registerRequest);
 
         when(pictureService.uploadPicture(any(MultipartFile.class))).thenReturn(UUID.randomUUID().toString());
-//        when(pictureService.uploadPicture(profilePicture)).thenReturn(UUID.randomUUID().toString());
-//        when(pictureService.uploadPicture(any(MultipartFile.class))).thenReturn(UUID.randomUUID().toString());
 
         // When
         Animal animal = animalService.createAnimal(animalRequest, user);
@@ -105,14 +101,6 @@ public class CreateNewAnimalITest {
         Animal retrievedAnimal = animalRepository.findById(animal.getId()).orElse(null);
         assertNotNull(retrievedAnimal);
         assertEquals(animal.getId(), retrievedAnimal.getId());
-
-//        Picture savedPicture = pictureRepository.findByAnimal(retrievedAnimal).get(0);
-//        assertNotNull(savedPicture);
-//        assertNotNull(savedPicture.getStoredPictureId());
-
-//        userRepository.delete(user);
-//        pictureRepository.delete(savedPicture);
-//        animalRepository.delete(retrievedAnimal);
     }
 
 

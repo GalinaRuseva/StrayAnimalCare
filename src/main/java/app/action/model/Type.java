@@ -1,5 +1,16 @@
 package app.action.model;
 
 public enum Type {
-    FED, VACCINATED, PARASITE_PROTECTED, SPAYED, NEUTERED, ADOPTED, OTHER;
+    FED("Fed"), VACCINATED("Vaccinated"), PARASITE_PROTECTED("Parasite protected"), NEUTERED("Neutered"), ADOPTED("Adopted"), OTHER("Other");
+
+    private final String name;
+
+    Type(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

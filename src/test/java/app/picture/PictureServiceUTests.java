@@ -1,6 +1,7 @@
 package app.picture;
 
 import app.exception.DomainException;
+import app.exception.NoFileSelectedForUploadException;
 import app.picture.client.PictureClient;
 import app.picture.dto.PictureUploadResponse;
 import app.picture.model.Picture;
@@ -59,7 +60,6 @@ public class PictureServiceUTests {
         assertEquals(savedPicture, result);
     }
 
-
     @Test
     void givenPictureId_whenDeleteById_thenDeletePictureWhenPictureExists() {
         // given
@@ -103,7 +103,7 @@ public class PictureServiceUTests {
         // given
         MultipartFile file = new MockMultipartFile("file", "file.jpg", "image/jpeg", "file data".getBytes());
         PictureUploadResponse uploadResponse = PictureUploadResponse.builder()
-                .id("uploadedId")
+                .id("2f06902d-8d8e-47e4-ab5d-9f9274bcd90d")
                 .build();
 
         ResponseEntity<PictureUploadResponse> responseEntity = new ResponseEntity<>(uploadResponse, HttpStatus.OK);
@@ -111,10 +111,10 @@ public class PictureServiceUTests {
         when(pictureClient.pictureUpload(file)).thenReturn(responseEntity);
 
         // when
-        String uploadedId = pictureService.uploadPicture(file);
+        String uploadedPictureId = pictureService.uploadPicture(file);
 
         // then
-        assertEquals("uploadedId", uploadedId);
+        assertEquals("2f06902d-8d8e-47e4-ab5d-9f9274bcd90d", uploadedPictureId);
         verify(pictureClient, times(1)).pictureUpload(file);
     }
 
@@ -127,7 +127,7 @@ public class PictureServiceUTests {
         when(pictureClient.pictureUpload(file)).thenReturn(responseEntity);
 
         // when/then
-        assertThrows(DomainException.class, () -> pictureService.uploadPicture(file));
+        assertThrows(NoFileSelectedForUploadException.class, () -> pictureService.uploadPicture(file));
         verify(pictureClient, times(1)).pictureUpload(file);
     }
 
@@ -137,7 +137,7 @@ public class PictureServiceUTests {
         MultipartFile file = new MockMultipartFile("file", "", "", new byte[0]);
 
         // WHEN/THEN
-        assertThrows(DomainException.class, () -> pictureService.uploadPicture(file));
+        assertThrows(NoFileSelectedForUploadException.class, () -> pictureService.uploadPicture(file));
         verify(pictureClient, never()).pictureUpload(any(MultipartFile.class));
     }
 

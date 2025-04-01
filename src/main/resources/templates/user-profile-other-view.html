@@ -82,7 +82,7 @@
                 <a th:href="@{'/animals/' + ${action.animal.id} + '/profile'}"
                    th:text="${#strings.capitalize(#strings.toLowerCase(action.animal.name))}"></a>
               </td>
-              <td th:text="${#strings.capitalize(#strings.toLowerCase(action.type.name()))}"></td>
+              <td th:text="${#strings.capitalize(#strings.toLowerCase(action.type.toString()))}"></td>
               <td th:text="${#strings.capitalize(#strings.toLowerCase(action.description))}"></td>
               <td th:text="${#temporals.format(action.createdOn, 'dd MMM YYYY HH:mm')}"></td>
               <td>

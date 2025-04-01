@@ -1,6 +1,5 @@
 package app.picture.service;
 
-import app.exception.DomainException;
 import app.exception.NoFileSelectedForUploadException;
 import app.picture.client.PictureClient;
 import app.picture.dto.PictureUploadResponse;

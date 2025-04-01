@@ -5,7 +5,6 @@ import app.healthRecord.model.HealthRecord;
 import app.healthRecord.repository.HealthRecordRepository;
 import app.user.model.User;
 import app.web.dto.HealthRecordRequest;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

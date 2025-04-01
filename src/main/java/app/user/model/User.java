@@ -2,9 +2,7 @@ package app.user.model;
 
 import app.action.model.Action;
 import app.animal.model.Animal;
-import app.comment.model.Comment;
 import app.location.model.Location;
-import app.picture.model.Picture;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +19,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "table-users")
-//@Table(name = "users")
 @EqualsAndHashCode
 public class User {
 
@@ -38,10 +35,8 @@ public class User {
 
     private String profilePicture;
 
-    //@Column(unique = false)
     private String email;
 
-    //@Column(unique = false)
     private String phoneNumber;
 
     @Column(nullable = false)

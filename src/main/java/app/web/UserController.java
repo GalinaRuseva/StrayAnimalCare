@@ -134,7 +134,6 @@ public class UserController {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("edit-user-profile");
             modelAndView.addObject("user", user);
-//            modelAndView.addObject("userEditRequest", userEditRequest);
             modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
             modelAndView.addObject("singleFileUploadRequest", singleFileUploadRequest);
             return modelAndView;
@@ -143,12 +142,5 @@ public class UserController {
         this.userService.saveProfilePicture(id, singleFileUploadRequest);
         return new ModelAndView("redirect:/users/" + id + "/edit-profile");
     }
-
-    //@PutMapping("/{id}/picture/profile")
-    //    public String addProfilePicture(@PathVariable UUID id, SingleFileUploadRequest singleFileUploadRequest){
-    //
-    //        this.userService.saveProfilePicture(id, singleFileUploadRequest.getFile());
-    //        return "redirect:/users/" + id + "/edit-profile";
-    //    }
 
 }

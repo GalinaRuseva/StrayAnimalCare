@@ -5,9 +5,6 @@ import app.user.model.User;
 import app.web.dto.AnimalEditRequest;
 import app.web.dto.UserEditRequest;
 import lombok.experimental.UtilityClass;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class DtoMapper {

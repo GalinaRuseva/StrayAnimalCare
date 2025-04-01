@@ -163,8 +163,8 @@ public class ActionServiceUTest {
         User user = User.builder().build();
         Animal animal = Animal.builder().build();
         ActionRequest actionRequest = ActionRequest.builder()
-                .type(Type.ADOPTED)
-                .description("The animal is adopted!")
+                .type(Type.FED)
+                .description("The animal is fed!")
                 .build();
         Action action = Action.builder()
                 .type(actionRequest.getType())

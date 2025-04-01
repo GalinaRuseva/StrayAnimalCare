@@ -15,10 +15,6 @@ import java.util.UUID;
 @Repository
 public interface ActionRepository extends JpaRepository<Action, UUID> {
 
-//    @Query("SELECT a FROM Action AS a" +
-//            " WHERE a.animal IN (SELECT fa FROM User u JOIN u.followedAnimals fa WHERE u.id = :userId)" +
-//            " ORDER BY a.createdOn DESC")
-
     @Query("SELECT a FROM Action a" +
             " JOIN a.animal AS an" +
             " JOIN User u ON an MEMBER OF u.followedAnimals" +

@@ -51,15 +51,5 @@ public class ExceptionAdvice {
         return modelAndView;
     }
 
-//    @ExceptionHandler(NoFileSelectedForUploadException.class)
-//    public String handleNoFileSelectedForUploadException(RedirectAttributes redirectAttributes, HttpServletRequest request, NoFileSelectedForUploadException exception) {
-//
-//        String userId = request.getParameter("id");
-//        String message = exception.getMessage();
-//
-//        redirectAttributes.addFlashAttribute("noFileSelectedMessage", message);
-//
-//        return "redirect:/users/" + userId + "/edit-profile";
-//    }
 
 }

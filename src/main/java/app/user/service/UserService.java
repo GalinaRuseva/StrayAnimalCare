@@ -105,8 +105,6 @@ public class UserService implements UserDetailsService, ApplicationListener<Auth
 
     public void followAnimal(Animal animal, User user) {
 
-//        User user = getById(userId);
-
         if (user.getFollowedAnimals() == null) {
             user.setFollowedAnimals(new ArrayList<>());
         }

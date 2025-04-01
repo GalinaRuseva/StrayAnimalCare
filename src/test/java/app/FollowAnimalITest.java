@@ -69,7 +69,6 @@ public class FollowAnimalITest {
         userService.followAnimal(animal, user);
 
         //then
-//        assertThat(user.getFollowedAnimals()).contains(animal);
         assertEquals(user.getFollowedAnimals().get(0).getId(), animal.getId());
     }
 

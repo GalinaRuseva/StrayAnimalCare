@@ -57,6 +57,4 @@ public class HealthRecordUTest {
         HealthRecord result = healthRecordCaptor.getValue();
         assertEquals(result.getId(), healthRecord.getId());
     }
-
-
 }

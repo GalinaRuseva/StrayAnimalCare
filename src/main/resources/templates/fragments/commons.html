@@ -21,25 +21,20 @@
             <a th:if="${user != null && user.role.name() == 'ADMIN'}" th:href="@{/users}">All Users</a>
         </div>
 
-        <div>
-            <ul>
-                <li th:unless="${user}">
-                    <a th:href="@{/login}">Login</a>
-                </li>
-                <li th:unless="${user}">
-                    <a th:href="@{/register}">Register</a>
-                </li>
-                <li class="nav-item" th:if="${user}">
+        <ul class="nav-item" style="display: flex;">
+            <li th:unless="${user}">
+                <a th:href="@{/login}">Login</a>
+            </li>
+            <li th:unless="${user}">
+                <a th:href="@{/register}">Register</a>
+            </li>
+            <li class="nav-item" th:if="${user}">
                     <span class="nav-link">
                         <span th:text="${user.username}"></span> |
                         <a th:href="@{/logout}" aria-label="Logout">Logout</a>
                     </span>
-                </li>
-            </ul>
-<!--            <li th:if="${user}">-->
-<!--                <a th:href="@{/logout}">Logout</a>-->
-<!--            </li>-->
-        </div>
+            </li>
+        </ul>
     </nav>
 </header>
 <footer class="footer bg-transparent py-2">

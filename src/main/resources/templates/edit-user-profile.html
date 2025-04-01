@@ -21,8 +21,6 @@
               <label for="profilePictureFile">Add New Profile Picture</label>
               <input type="file" id="profilePictureFile" name="file" th:field="*{file}" class="form-control" />
               <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Error message</small>
-<!--              <small class="danger" th:text="${noFileSelectedMessage}">Error message</small>-->
-
               <button type="submit" class="btn btn-sm btn-outline-error">Upload</button>
             </form>
           </div>

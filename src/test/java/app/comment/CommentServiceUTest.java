@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -30,16 +32,6 @@ public class CommentServiceUTest {
     @InjectMocks
     private CommentService commentService;
 
-    //    public void createNewComment(@Valid CommentRequest commentRequest, Action action, User user) {
-    //        Comment comment = Comment.builder()
-    //                .content(commentRequest.getContent())
-    //                .user(user)
-    //                .createdOn(LocalDateTime.now())
-    //                .action(action)
-    //                .build();
-    //        commentRepository.save(comment);
-    //    }
-
     @Test
     void givenCommentRequestActionUser_whenCreateNewComment_thenCommentIsSaved() {
 
@@ -48,7 +40,9 @@ public class CommentServiceUTest {
                 .content("Great!")
                 .build();
         Action action = Action.builder().build();
-        User user = User.builder().build();
+        User user = User.builder()
+                .id(UUID.randomUUID())
+                .build();
         Comment comment = Comment.builder()
                 .content(commentRequest.getContent())
                 .user(user)
@@ -60,11 +54,10 @@ public class CommentServiceUTest {
         //when
         commentService.createNewComment(commentRequest, action, user);
 
-//        //then
-//        ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
-//        verify(commentRepository).save(commentCaptor.capture());
-//        Action result = commentCaptor.getValue();
-//        assertEquals(result.getUser(), user);
-//        assertEquals(result.get, action);
+        //then
+        ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
+        verify(commentRepository).save(commentCaptor.capture());
+        Comment result = commentCaptor.getValue();
+        assertEquals(result.getUser().getId(), user.getId());
     }
 }
