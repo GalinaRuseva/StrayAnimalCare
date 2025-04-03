@@ -6,18 +6,18 @@
 <header th:replace="~{fragments/commons::nav}"></header>
 <main>
   <div class="welcome mt-1 mb-4" style="width: 90%; margin: 0 auto;">
-    <h3 class="mySticky text-dark user" th:text="${(user.firstName != null && !user.firstName.isBlank()) ? 'Editing ' + user.firstName + ' ' + user.lastName + ' Profile' : user.username + ' Profile'}"></h3>
+    <h3 class="mySticky text-dark user" th:text="${(selectedUser.firstName != null && !selectedUser.firstName.isBlank()) ? 'Editing ' + selectedUser.firstName + ' ' + selectedUser.lastName + ' Profile' : selectedUser.username + ' Profile'}"></h3>
 
     <div class="mt-1 mb-2">
       <div class="form-group">
         <label>Profile picture</label>
         <div>
-          <img alt="" th:src="${#strings.isEmpty(user.profilePicture) ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : 'http://localhost:8081/api/v1/pictures/view/' + user.profilePicture }" style="width: 180px" />
+          <img alt="" th:src="${#strings.isEmpty(selectedUser.profilePicture) ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : 'http://localhost:8081/api/v1/pictures/view/' + selectedUser.profilePicture }" style="width: 180px" />
 
         </div>
-        <th:block th:if="${#strings.isEmpty(user.profilePicture)}">
+        <th:block th:if="${#strings.isEmpty(selectedUser.profilePicture)}">
           <div>
-            <form th:action="@{'/users/' + ${user.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${singleFileUploadRequest}">
+            <form th:action="@{'/users/' + ${selectedUser.id} + '/picture/profile'}" th:method="PUT" enctype="multipart/form-data" th:object="${singleFileUploadRequest}">
               <label for="profilePictureFile">Add New Profile Picture</label>
               <input type="file" id="profilePictureFile" name="file" th:field="*{file}" class="form-control" />
               <small th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Error message</small>
@@ -25,20 +25,20 @@
             </form>
           </div>
         </th:block>
-        <th:block th:unless="${#strings.isEmpty(user.profilePicture)}">
+        <th:block th:unless="${#strings.isEmpty(selectedUser.profilePicture)}">
           <div>
-            <form th:action="@{'/users/' + ${user.id} + '/picture/profile/' + ${user.profilePicture}}" th:method="DELETE">
+            <form th:action="@{'/users/' + ${selectedUser.id} + '/picture/profile/' + ${selectedUser.profilePicture}}" th:method="DELETE">
               <button type="submit" class="btn btn-sm btn-outline-error">delete</button>
             </form>
           </div>
         </th:block>
       </div>
-      <form th:action="@{'/users/' + ${user.id} + '/edit-profile'}" th:object="${userEditRequest}" enctype="multipart/form-data" th:method="PUT">
+      <form th:action="@{'/users/' + ${selectedUser.id} + '/edit-profile'}" th:object="${userEditRequest}" enctype="multipart/form-data" th:method="PUT">
 
         <div class="form-group">
-          <p th:text="'User Id: '+ ${user.id}"></p>
-          <p th:text="'Username: '+ ${user.username}"></p>
-          <p th:text="'Last profile update: '+ ${#temporals.format(user.updatedOn, 'dd MMM YYYY HH:mm')}"></p>
+          <p th:text="'User Id: '+ ${selectedUser.id}"></p>
+          <p th:text="'Username: '+ ${selectedUser.username}"></p>
+          <p th:text="'Last profile update: '+ ${#temporals.format(selectedUser.updatedOn, 'dd MMM YYYY HH:mm')}"></p>
         </div>
 
         <div class="form-group">
@@ -82,7 +82,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Save Changes</button>
-          <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
+          <a th:href="@{'/users/' + ${selectedUser.id} + '/profile'}" class="btn btn-secondary">Cancel</a>
       </form>
     </div>
   </div>

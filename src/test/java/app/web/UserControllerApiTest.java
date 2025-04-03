@@ -177,13 +177,15 @@ public class UserControllerApiTest {
     @Test
     void getEditProfileMenu_shouldReturnUpdatedUserProfileView() throws Exception {
 
-        User user = TestBuilders.aRandomUser();
-        AuthenticationMetadata principal = new AuthenticationMetadata(user.getId(), "galina", "123123", UserRole.ADMIN, true);
+        User loggedInUserId = TestBuilders.aRandomUser();
+        UUID selectedUserId = loggedInUserId.getId();
 
-        when(userService.getById(user.getId())).thenReturn(user);
+        AuthenticationMetadata principal = new AuthenticationMetadata(loggedInUserId.getId(), "galina", "123123", UserRole.ADMIN, true);
+
+        when(userService.getById(loggedInUserId.getId())).thenReturn(loggedInUserId);
 
         // 1. Build Request
-        MockHttpServletRequestBuilder request = get("/users/{id}/edit-profile", user.getId())
+        MockHttpServletRequestBuilder request = get("/users/{id}/edit-profile", loggedInUserId.getId())
                 .with(user(principal))
                 .with(csrf());
 
@@ -192,11 +194,7 @@ public class UserControllerApiTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("edit-user-profile"));
 
-        verify(userService, times(1)).getById(any(UUID.class));
+        verify(userService, times(2)).getById(any(UUID.class));
     }
-
-
-
-
 
 }

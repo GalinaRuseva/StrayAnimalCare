@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row">
           <div class="col">
-            <p>Profile image</p>
+            <p>Profile picture</p>
             <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : 'http://localhost:8081/api/v1/pictures/view/'+ user.profilePicture}" alt="Profile Picture" class="profile-image">
           </div>
           <div class="col">

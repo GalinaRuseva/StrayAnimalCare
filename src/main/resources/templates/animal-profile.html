@@ -132,7 +132,7 @@
                             <label for="action-description" class="h4 mb-2">Description</label>
                         </div>
                         <input type="text" class="form-control" id="action-description" name="description" th:field="*{description}"/>
-                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="danger">Error message</small>
+                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger">Error message</small>
                     </div>
                     <div class="button-holder d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary" value="Register">Add action</button>
@@ -147,14 +147,14 @@
                             <label for="record-description" class="h4 mb-2">Description</label>
                         </div>
                         <input type="text" class="form-control" id="record-description" name="description" th:field="*{description}"/>
-                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="danger">Error message</small>
+                        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger">Error message</small>
                     </div>
                     <div class="form-group">
                         <div class="label-holder textCol d-flex justify-content-center">
                             <label for="veterinaryInformation" class="h4 mb-2">Veterinary Information</label>
                         </div>
                         <input type="text" class="form-control" id="veterinaryInformation" name="veterinaryInformation" th:field="*{veterinaryInformation}"/>
-                        <small th:if="${#fields.hasErrors('veterinaryInformation')}" th:errors="*{veterinaryInformation}" class="danger">Error message</small>
+                        <small th:if="${#fields.hasErrors('veterinaryInformation')}" th:errors="*{veterinaryInformation}" class="text-danger">Error message</small>
                     </div>
                     <div class="button-holder d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary" value="Register">Add health record</button>

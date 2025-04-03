@@ -1,5 +1,6 @@
 package app.web.validators;
 
+import app.web.dto.AnimalRequest;
 import app.web.dto.SingleFileUploadRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

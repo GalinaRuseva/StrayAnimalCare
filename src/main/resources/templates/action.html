@@ -36,7 +36,7 @@
       <tr th:each="comment : ${allActionComments}">
         <!--          <td th:text="${comment.user.username}"></td>-->
         <td>
-          <a th:href="@{'/users/' + ${user.id} + '/profile'}" th:text="${comment.user.username}"></a>
+          <a th:href="@{'/users/' + ${comment.user.id} + '/profile'}" th:text="${comment.user.username}"></a>
         </td>
         <td th:text="${comment.content}"></td>
         <td th:text="${#temporals.format(comment.createdOn, 'dd MMM YYYY HH:mm')}"></td>

@@ -68,27 +68,31 @@ public class UserController {
     }
 
     @GetMapping("/{id}/edit-profile")
-    public ModelAndView updateUserProfile(@PathVariable UUID id,@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView updateUserProfile(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.getById(id);
+        User selectedUser = userService.getById(id);
+        User loggedInUser = userService.getById(authenticationMetadata.getUserId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("edit-user-profile");
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+        modelAndView.addObject("user", loggedInUser);
+        modelAndView.addObject("selectedUser", selectedUser);
+        modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(selectedUser));
         modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
         return modelAndView;
     }
 
     @PutMapping(path = "/{id}/edit-profile")
-    public ModelAndView updateUserProfile(@PathVariable UUID id, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
+    public ModelAndView updateUserProfile(@PathVariable UUID id,  @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
 
-        User user = userService.getById(id);
+        User selectedUser = userService.getById(id);
+        User loggedInUser = userService.getById(authenticationMetadata.getUserId());
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("edit-user-profile");
-            modelAndView.addObject("user", user);
+            modelAndView.addObject("user", loggedInUser);
+            modelAndView.addObject("selectedUser", selectedUser);
             modelAndView.addObject("singleFileUploadRequest", new SingleFileUploadRequest());
             modelAndView.addObject("userEditRequest", userEditRequest);
             return modelAndView;
@@ -96,7 +100,7 @@ public class UserController {
 
         userService.editUserDetails(id, userEditRequest);
 
-        return new ModelAndView("redirect:/users/" + user.getId() + "/profile");
+        return new ModelAndView("redirect:/users/" + selectedUser.getId() + "/profile");
     }
 
     @PutMapping("/{id}/status")
@@ -125,16 +129,20 @@ public class UserController {
     }
 
     @PutMapping("/{id}/picture/profile")
-    public ModelAndView addProfilePicture(@PathVariable UUID id, @Validated SingleFileUploadRequest singleFileUploadRequest, BindingResult bindingResult){
+    public ModelAndView addProfilePicture(@PathVariable UUID id, @Validated SingleFileUploadRequest singleFileUploadRequest, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, BindingResult bindingResult){
 
-        User user = userService.getById(id);
+        User selectedUser = userService.getById(id);
+        User loggedInUser = userService.getById(authenticationMetadata.getUserId());
+
         fileInputValidator.validate(singleFileUploadRequest, bindingResult); // Use the validator
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("edit-user-profile");
-            modelAndView.addObject("user", user);
-            modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+
+            modelAndView.addObject("user", loggedInUser);
+            modelAndView.addObject("selectedUser", selectedUser);
+            modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(selectedUser));
             modelAndView.addObject("singleFileUploadRequest", singleFileUploadRequest);
             return modelAndView;
         }
