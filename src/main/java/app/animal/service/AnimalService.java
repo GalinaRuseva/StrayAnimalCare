@@ -155,7 +155,6 @@ public class AnimalService {
         return this.animalRepository.save(animal);
     }
 
-    @Async
     @EventListener
     public void changeAnimalStatusWhenAdopted(AdoptionEvent adoptionEvent) {
 
@@ -165,7 +164,6 @@ public class AnimalService {
         log.info("Animal with name [%s] and id [%s] is adopted!".formatted(adoptedAnimal.getName(), adoptedAnimal.getId()));
     }
 
-    @Async
     @EventListener
     public void changeAnimalInfoToNeutered(NeuteredEvent neuteredEvent) {
 

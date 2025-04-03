@@ -44,7 +44,7 @@ body > nav > div.links > li {
 }
 
 body {
-    background-image: url(/img/background-1.jpg);
+    background-image: url(/images/background-1.jpg);
     background-position: center;
     background-attachment: fixed;
     /*background-size: cover;*/

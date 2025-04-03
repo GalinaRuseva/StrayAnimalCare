@@ -135,12 +135,12 @@ public class DataBaseInitializerService implements CommandLineRunner {
         userRepository.save(userNikolay);
 
         //create User with role USER, active before 3 months
-        User userVladislav = User.builder()
-                .username("vladislav")
+        User userYordan = User.builder()
+                .username("Yordan")
                 .password(passwordEncoder.encode("123123"))
-                .firstName("Vladislav")
+                .firstName("Yordan")
                 .lastName("Petkov")
-                .email("vladislav@gmail.com")
+                .email("yordan@gmail.com")
                 .phoneNumber("089233440666")
                 .role(UserRole.USER)
                 .isActive(true)
@@ -152,7 +152,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
                 .followedAnimals(new ArrayList<>())
                 .build();
 
-        userRepository.save(userVladislav);
+        userRepository.save(userYordan);
 
         // create animal - Mishi
         Animal animalMishi = Animal.builder()
@@ -414,7 +414,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         HealthRecord healthRecordMishi = HealthRecord.builder()
                 .animal(animalMishi)
                 .createdOn(LocalDateTime.now())
-                .description("Routine physical examination. Vital signs within normal limits. Good overall condition. No abnormalities observed.")
+                .description("Routine physical examination, vital signs within normal limits good overall condition no abnormalities observed.")
                 .veterinaryInformation("Dr. Dimitrov, Vet clinik, Bulgaria, Sofia.")
                 .build();
 
@@ -434,7 +434,7 @@ public class DataBaseInitializerService implements CommandLineRunner {
         HealthRecord healthRecordMaks = HealthRecord.builder()
                 .animal(animalMaks)
                 .createdOn(LocalDateTime.now())
-                .description("Routine physical examination. Vital signs within normal limits. Good overall condition. No abnormalities observed.")
+                .description("Routine physical examination, vital signs within normal limits, good overall condition, no abnormalities observed.")
                 .veterinaryInformation("Dr. Dimitrov, Vet clinik, Bulgaria, Sofia.")
                 .build();
 
@@ -455,5 +455,24 @@ public class DataBaseInitializerService implements CommandLineRunner {
         userNikolay.getFollowedAnimals().add(animalBobi);
         userNikolay.getFollowedAnimals().add(animalMaks);
         userRepository.save(userNikolay);
+
+        Action actionMaksFedByYordan = Action.builder()
+                .user(userYordan)
+                .animal(animalMaks)
+                .type(app.action.model.Type.FED)
+                .description("Maks had eaten dry dog food for lunch.")
+                .createdOn(LocalDateTime.now())
+                .comments(new ArrayList<>())
+                .build();
+
+        actionRepository.save(actionMaksFedByYordan);
+
+
+        Comment commentYordan = Comment.builder()
+                .content("Looks good.")
+                .user(userYordan)
+                .createdOn(LocalDateTime.now())
+                .action(actionMaksNewHouse)
+                .build();
     }
 }
